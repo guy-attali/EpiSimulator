@@ -1,6 +1,6 @@
 from enum import Enum
 
-from traits.abstract import Trait, TRAITTYPE
+from traits.base import Trait, TRAITTYPE
 
 
 class SEX(Enum):

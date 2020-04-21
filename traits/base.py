@@ -1,5 +1,5 @@
 # traits/__init__.py
-# traits/abstract.py ?
+# traits/base.py ?
 from enum import Enum
 
 

@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from typing import List
 
 from core.person import Person
-from policies.abstract import Policy
-from sites.abstract import Site
+from policies.base import Policy
+from sites.base import Site
 
 
 class World:
@@ -35,3 +35,5 @@ class World:
 
 
 world = World()
+
+__all__ = ['world']

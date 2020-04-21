@@ -1,12 +1,13 @@
+from core.person import Person
 from procedures.abstract import Procedure
-from traits.abstract import TRAITTYPE
+from traits.base import TRAITTYPE
 
 
 class EvaluateSiteInfectionProcedure(Procedure):
-    def __use(self, person):
-        return person.current_site is not None and person.traits[TRAITTYPE.INFECTED] is True
+    def should_apply(self, person: Person) -> bool:
+        return person.site is not None and person.traits[TRAITTYPE.INFECTED] is True
 
-    def __apply(self, person):
-        for person in person.current_site.getPeople():
+    def apply(self, person: Person):
+        for person in person.site.get_peoples():
             if person.traits[TRAITTYPE.INFECTED] is True:
                 continue

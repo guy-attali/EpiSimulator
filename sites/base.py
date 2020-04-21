@@ -4,6 +4,7 @@ from collections import namedtuple
 from typing import Dict, List
 
 from core.person import Person
+from core.world import world
 
 
 class GeoLocation:
@@ -28,9 +29,8 @@ class Site:
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
 
-    def enter(self, person: Person, enter_time: int):
-        # TODO: Originally, this was clock.current_tick, but I assume we don't want clock to be global
-        self.people[person] = enter_time
+    def enter(self, person: Person):
+        self.people[person] = world.current_ts
 
     def leave(self, person):
         if person not in self.people:

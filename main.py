@@ -2,11 +2,11 @@ from random import random
 
 from core.person import Person
 from core.world import world
-from policies.abstract import TestPolicy
+from policies.base import TestPolicy
 from procedures.get_tested import GetTestedProcedure
 from procedures.go_home import GoHomeProcedure
 from procedures.go_work import GoWorkProcedure
-from sites.abstract import GeoLocation
+from sites.base import GeoLocation
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
 from traits.age import TraitAge

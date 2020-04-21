@@ -1,4 +1,4 @@
-from traits.abstract import TRAITTYPE, Trait
+from traits.base import TRAITTYPE, Trait
 
 
 class TraitAge(Trait):

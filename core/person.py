@@ -1,10 +1,9 @@
-from enum import Enum
 from typing import List, Dict
 from core.world import world
 
 from procedures.abstract import Procedure
-from sites.abstract import Site, SiteLog
-from traits.abstract import Trait, TRAITTYPE
+from sites.base import Site, SiteLog
+from traits.base import Trait, TRAITTYPE
 
 
 class Person:
@@ -53,11 +52,8 @@ class Person:
 
     def tick(self):
         for procedure in self.procedures:
-            # TODO: Where should it get policies from?
-            if not procedure.use(self):
-                continue
-            decision.apply(self)
-        self.current_tick += 1
+            if procedure.should_apply(self):
+                procedure.apply(self)
 
     def __hash__(self) -> int:
         return self.uuid

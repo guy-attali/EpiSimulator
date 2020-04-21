@@ -1,4 +1,4 @@
-from traits.abstract import Trait, TRAITTYPE
+from traits.base import Trait, TRAITTYPE
 
 
 class TraitInfected(Trait):

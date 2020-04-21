@@ -1,8 +1,9 @@
 from enum import Enum
 
 from core.person import Person
+from core.world import world
 from procedures.abstract import Procedure
-from sites.abstract import Site
+from sites.base import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame
 
@@ -20,10 +21,10 @@ class CommuteProcedure(Procedure):
         self.commute_state: COMMUTE_STATE = COMMUTE_STATE.PREVIOUS_DEST
         # self.commuting_eta_tick = None
 
-    def __use(self, person: Person):
-        return self.timeframe.within(clock)
+    def should_apply(self, person: Person) -> bool:
+        return self.timeframe.within(world.current)
 
-    def __apply(self, person):
+    def apply(self, person: Person):
         # if within travel time?
         # add policy hook?
         # should decide on a transport site here instead of as a static?
@@ -33,13 +34,13 @@ class CommuteProcedure(Procedure):
         if self.commute_state is COMMUTE_STATE.PREVIOUS_DEST:
             site_transport = self.find_transport(person)
             self.commuting_eta_tick = site_transport.eta_tick(self.dest_site)
-            person.move(site_transport)
+            person.site = site_transport
             self.commute_state = COMMUTE_STATE.COMMUTING
-        elif self.commute_state is COMMUTE_STATE.COMMUTING and (self.commuting_eta_tick >= clock.current):
-            person.move(self.dest_site)
+        elif self.commute_state is COMMUTE_STATE.COMMUTING and (self.commuting_eta_tick >= world.current):
+            person.site = self.dest_site
             self.commute_state = COMMUTE_STATE.ARRIVED
 
-        person.move(self.dest_site)
+        person.site = self.dest_site
 
     def find_transport(self, person : Person) -> TransportSite:
         return TransportSite()

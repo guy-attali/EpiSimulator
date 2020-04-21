@@ -1,4 +1,4 @@
-from sites.abstract import Site
+from sites.base import Site
 
 
 class WorkplaceSite(Site):
