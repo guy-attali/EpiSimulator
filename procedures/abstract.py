@@ -2,13 +2,11 @@ from typing import List
 
 from core.person import Person
 from policies.abstract import Policy
+from core.world import world
 
 
 class Procedure:
-    def use(self, person: Person, policies: List[Policy]):
-        for policy in policies:
-            if not policy.pre_procedure(self, person):
-                return
+    def use(self, person: Person):
         self.__use(person)
 
     def apply(self, person):

@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List, Dict
+from core.world import world
 
 from procedures.abstract import Procedure
 from sites.abstract import Site, SiteLog
@@ -17,7 +18,6 @@ class Person:
         self.procedures: List[Procedure] = []
         self._commute_history: List[SiteLog] = []
         self._current_site = None
-        self.current_tick = 1
 
         for trait in initial_traits:
             self.add_trait(trait)
@@ -28,9 +28,15 @@ class Person:
     def add_trait(self, trait):
         self.traits[trait.c] = trait
 
-    def add_procedure(self, decision, index=None):
+    def add_procedure(self, procedure, index=None):
         index = index or len(self.procedures)
-        self.procedures.insert(index, decision)
+
+        for policy in world.policies:
+            if not hasattr(policy, 'decorateProcedure'):
+                continue
+            procedure = policy.decorateProcedure(procedure)
+
+        self.procedures.insert(index, procedure)
 
     @property
     def site(self) -> Site:
@@ -39,16 +45,16 @@ class Person:
     @site.setter
     def site(self, other_site):
         if self._current_site is not None:
-            self._commute_history.append(SiteLog(self._current_site, self.current_tick))
+            self._commute_history.append(SiteLog(self._current_site, world.current))
             self._current_site.leave(self)
 
         self._current_site = other_site
         self._current_site.enter(self)
 
     def tick(self):
-        for decision in self.procedures:
+        for procedure in self.procedures:
             # TODO: Where should it get policies from?
-            if not decision.use(self):
+            if not procedure.use(self):
                 continue
             decision.apply(self)
         self.current_tick += 1

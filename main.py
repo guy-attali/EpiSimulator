@@ -1,7 +1,7 @@
 from random import random
 
 from core.person import Person
-from core.world import World
+from core.world import world
 from policies.abstract import TestPolicy
 from procedures.get_tested import GetTestedProcedure
 from procedures.go_home import GoHomeProcedure
@@ -19,7 +19,6 @@ def random_location():
 
 
 def main():
-    world = World()
     world.policies.append(TestPolicy())
 
     household = world.sites.append(HouseholdSite(random_location()))

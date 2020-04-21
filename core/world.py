@@ -32,3 +32,6 @@ class World:
     def notify(self):
         # allow a notification mechanism to make visual simulation easier?
         pass
+
+
+world = World()
