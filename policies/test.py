@@ -1,4 +1,5 @@
 from policies.base import Policy, DecoratedProcedure
+from procedures.go_home import GoHomeProcedure
 
 
 class DecoratedProcedureGoHome(DecoratedProcedure):
@@ -11,11 +12,9 @@ class DecoratedProcedureGoHome(DecoratedProcedure):
 
 class TestPolicy(Policy):
     def decorate_procedure(self, procedure):
-        # @TODO this would prevent multiple wrapping as it'll change the class name from the POV of further policies, need to use static naming
-        if (procedure.name != "GoHomeProcedure"):
-            return procedure
-
-        return DecoratedProcedureGoHome(procedure)
+        if procedure.is_type(GoHomeProcedure):
+            return DecoratedProcedureGoHome(procedure)
+        return procedure
 
     def world_pretick(self):
         pass

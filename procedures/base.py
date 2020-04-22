@@ -15,3 +15,6 @@ class Procedure(abc.ABC):
     @abc.abstractmethod
     def apply(self, person: Person):
         pass
+
+    def is_type(self, instance_type):
+        return type(self) == instance_type
