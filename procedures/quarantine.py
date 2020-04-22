@@ -1,4 +1,4 @@
-from procedures.abstract import Procedure
+from procedures.base import Procedure
 
 
 class HomeQuarantineProcedure(Procedure):

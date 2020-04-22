@@ -2,7 +2,7 @@ from enum import Enum
 
 from core.person import Person
 from core.world import world
-from procedures.abstract import Procedure
+from procedures.base import Procedure
 from sites.base import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame

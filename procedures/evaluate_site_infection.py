@@ -1,5 +1,5 @@
 from core.person import Person
-from procedures.abstract import Procedure
+from procedures.base import Procedure
 from traits.base import TRAITTYPE
 
 
