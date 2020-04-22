@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import List
 
 
 class World:
@@ -13,15 +12,6 @@ class World:
         self.time_step = timedelta(minutes=5)
         self.autoinc_entity_id = 0
 
-    def appendPerson (self, person):
-        self.people.append(person)
-
-    def appendPolicy (self, policy):
-        self.policies.append(policy)
-
-    def appendSite (self, site):
-        self.sites.append(site)
-
     def tick(self):
         for policy in self.policies:
             policy.world_pretick()
@@ -31,7 +21,7 @@ class World:
 
         for policy in self.policies:
             policy.world_posttick()
-            
+
         self.current += 1
         self.current_ts = self.current_ts + self.time_step
 

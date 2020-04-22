@@ -1,4 +1,5 @@
-from typing import List, Dict
+from typing import List
+
 from core.world import world
 
 
@@ -29,10 +30,10 @@ class Person:
         self.procedures.insert(index, procedure)
 
     @property
-    def site (self):
+    def site(self):
         return self._current_site
 
-    def move (self, site):
+    def move(self, site):
         if self._current_site is not None:
             self._commute_history.append(SiteLog(self._current_site, world.current))
             self._current_site.leave(self)

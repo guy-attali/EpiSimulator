@@ -3,11 +3,10 @@ from random import random
 from core.person import Person
 from core.world import world
 from policies.test import TestPolicy
+from procedures.evaluate_site_infection import EvaluateSiteInfectionProcedure
 from procedures.get_tested import GetTestedProcedure
 from procedures.go_home import GoHomeProcedure
 from procedures.go_work import GoWorkProcedure
-from procedures.evaluate_site_infection import EvaluateSiteInfectionProcedure
-
 from sites.base import GeoLocation
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
@@ -33,12 +32,14 @@ def main():
     # decisions happen in order, should order decisions per all people?
     world.people.append(Person(
         [TraitSex(SEX.MALE), TraitAge(30)],
-        [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)), GoWorkProcedure(workplace1, TimeFrame(1, 2)),
+        [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)),
+         GoWorkProcedure(workplace1, TimeFrame(1, 2)),
          EvaluateSiteInfectionProcedure()]
     ))
-    world.appendPerson(Person(
+    world.people.append(Person(
         [TraitSex(SEX.FEMALE), TraitAge(30)],
-        [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)), GoWorkProcedure(workplace2, TimeFrame(1, 2)),
+        [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)),
+         GoWorkProcedure(workplace2, TimeFrame(1, 2)),
          EvaluateSiteInfectionProcedure()]
     ))
 

@@ -1,10 +1,11 @@
 import abc
+
 from core.person import Person
 
 
 class Procedure(abc.ABC):
     @property
-    def name (self):
+    def name(self):
         return self.__class__.__name__
 
     @abc.abstractmethod

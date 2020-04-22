@@ -42,5 +42,5 @@ class CommuteProcedure(Procedure):
 
         person.site = self.dest_site
 
-    def find_transport(self, person : Person) -> TransportSite:
+    def find_transport(self, person: Person) -> TransportSite:
         return TransportSite()
