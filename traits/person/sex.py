@@ -1,6 +1,6 @@
 from enum import Enum
 
-from traits.base import Trait, TRAITTYPE
+from traits.base import Trait, PERSON_TRAIT_TYPE
 
 
 class SEX(Enum):
@@ -9,7 +9,7 @@ class SEX(Enum):
 
 
 class TraitSex(Trait):
-    c = TRAITTYPE.SEX
+    c = PERSON_TRAIT_TYPE.SEX
 
     def __init__(self, sex: SEX):
         super(TraitSex, self).__init__(sex)

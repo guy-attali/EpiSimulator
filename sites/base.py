@@ -5,6 +5,7 @@ from typing import Dict, List
 
 from core.person import Person
 from core.world import world
+from traits.base import Trait, PERSON_TRAIT_TYPE
 
 
 class GeoLocation:
@@ -22,20 +23,22 @@ class GeoLocation:
 
 
 class Site:
-    def __init__(self, location: GeoLocation, initial_traits = [], initial_procedures = []):
+    def __init__(self, location: GeoLocation, initial_traits=None, initial_procedures=None):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.traits = []
+        self.traits: Dict[PERSON_TRAIT_TYPE, Trait] = {}
         self.procedures = []
 
+        initial_traits = initial_traits or []
         for trait in initial_traits:
             self.add_trait(trait)
 
+        initial_procedures = initial_procedures or []
         for procedure in initial_procedures:
-            self.add_procedure(decision)
+            self.add_procedure(procedure)
 
     def add_trait(self, trait):
         self.traits[trait.c] = trait

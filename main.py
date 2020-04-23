@@ -3,17 +3,17 @@ from random import random
 from core.person import Person
 from core.world import world
 from policies.test import TestPolicy
-from procedures.evaluate_site_infection import EvaluateSiteInfectionProcedure
-from procedures.get_tested import GetTestedProcedure
-from procedures.go_home import GoHomeProcedure
-from procedures.go_work import GoWorkProcedure
+from procedures.person.evaluate_site_infection import EvaluateSiteInfectionProcedure
+from procedures.person.get_tested import GetTestedProcedure
+from procedures.person.go_home import GoHomeProcedure
+from procedures.person.go_work import GoWorkProcedure
 from sites.base import GeoLocation
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
-from traits.age import TraitAge
-from traits.sex import TraitSex, SEX
-from site_traits.infetion_factor import SiteTraitInfectionFactor
-from site_procedures.test import TestProcedureSite
+from traits.person.age import TraitAge
+from traits.person.sex import TraitSex, SEX
+from traits.sites.interaction_factor import SiteTraitInfectionFactor
+from procedures.sites.test import TestProcedureSite
 from utils.timeframe import TimeFrame
 
 
@@ -28,8 +28,8 @@ def main():
 
     household = world.sites.append(HouseholdSite(random_location()))
     # can premake workplaces and then allocate people to them
-    workplace1 = world.sites.append(WorkplaceSite(random_location()), [SiteTraitInfectionFactor(1.5)], [TestProcedureSite()])
-    workplace2 = world.sites.append(WorkplaceSite(random_location()), [SiteTraitInfectionFactor(1.2)], [TestProcedureSite()])
+    workplace1 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.5)], [TestProcedureSite()]))
+    workplace2 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.2)], [TestProcedureSite()]))
 
     # decisions happen in order, should order decisions per all people?
     world.people.append(Person(

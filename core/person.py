@@ -1,6 +1,9 @@
+from collections import namedtuple
 from typing import List
 
 from core.world import world
+
+SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
 
 class Person:
@@ -16,7 +19,7 @@ class Person:
             self.add_trait(trait)
 
         for procedure in initial_procedures:
-            self.add_procedure(decision)
+            self.add_procedure(procedure)
 
     def add_trait(self, trait):
         self.traits[trait.c] = trait
@@ -33,7 +36,7 @@ class Person:
     def site(self):
         return self._current_site
 
-    def move(self, site):
+    def move(self, other_site):
         if self._current_site is not None:
             self._commute_history.append(SiteLog(self._current_site, world.current))
             self._current_site.leave(self)

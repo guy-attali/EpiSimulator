@@ -2,7 +2,7 @@ from enum import Enum
 
 from core.person import Person
 from core.world import world
-from procedures.base import Procedure
+from procedures.base import PersonProcedure
 from sites.base import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame
@@ -14,7 +14,7 @@ class COMMUTE_STATE(Enum):
     ARRIVED = 3
 
 
-class CommuteProcedure(Procedure):
+class CommuteProcedure(PersonProcedure):
     def __init__(self, dest_site: Site, timeframe):
         self.dest_site: Site = dest_site
         self.timeframe: TimeFrame = timeframe

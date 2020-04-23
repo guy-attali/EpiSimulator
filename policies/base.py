@@ -1,11 +1,11 @@
 from abc import abstractmethod
-from procedures.base import Procedure
-from procedures_sites.base import SiteProcedure
+
+from procedures.base import SiteProcedure, PersonProcedure
 
 
-class DecoratedPersonProcedure(Procedure):
-    def __init__(self, procedure: Procedure):
-        self.decorated_procedure: Procedure = procedure
+class DecoratedPersonProcedure(PersonProcedure):
+    def __init__(self, procedure: PersonProcedure):
+        self.decorated_procedure: PersonProcedure = procedure
 
     @abstractmethod
     def should_apply(self, person):
@@ -17,6 +17,7 @@ class DecoratedPersonProcedure(Procedure):
 
     def is_type(self, instance_type):
         return self.decorated_procedure.is_type(instance_type)
+
 
 class DecoratedSiteProcedure(SiteProcedure):
     def __init__(self, procedure: SiteProcedure):
@@ -34,8 +35,7 @@ class DecoratedSiteProcedure(SiteProcedure):
         return self.decorated_procedure.is_type(instance_type)
 
 
-
-class Policy():
+class Policy:
 
     def decorate_procedure(self, procedure):
         return procedure

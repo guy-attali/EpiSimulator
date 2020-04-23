@@ -1,5 +1,6 @@
 # traits/__init__.py
 # traits/base.py ?
+from abc import abstractmethod
 from enum import Enum
 
 
@@ -16,7 +17,11 @@ class Trait:
         return self.value is True
 
 
-class TRAITTYPE(Enum):
+class PERSON_TRAIT_TYPE(Enum):
     INFECTED = 1
     SEX = 51
     AGE = 52
+
+
+class SITE_TRAIT_TYPE(Enum):
+    INTERACTION_FACTOR = 1

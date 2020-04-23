@@ -1,5 +1,5 @@
-from policies.base import Policy, DecoratedPersonProcedure, DecoratedSiteProcedure
-from procedures.go_home import GoHomeProcedure
+from policies.base import Policy, DecoratedPersonProcedure
+from procedures.person.go_home import GoHomeProcedure
 
 
 class DecoratedProcedureGoHome(DecoratedPersonProcedure):

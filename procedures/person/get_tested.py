@@ -1,9 +1,9 @@
 from core.person import Person
-from procedures.base import Procedure
-from traits.infected import TraitInfected
+from procedures.base import PersonProcedure
+from traits.person.infected import TraitInfected
 
 
-class GetTestedProcedure(Procedure):
+class GetTestedProcedure(PersonProcedure):
     def should_apply(self, person: Person) -> bool:
         # whatever conditions get somebody tested, use policy to mark a get tested trait?
         return False

@@ -1,8 +1,8 @@
-from traits.base import TRAITTYPE, Trait
+from traits.base import PERSON_TRAIT_TYPE, Trait
 
 
 class TraitAge(Trait):
-    c = TRAITTYPE.AGE
+    c = PERSON_TRAIT_TYPE.AGE
 
     def __init__(self, age: int):
         super(TraitAge, self).__init__(age)
