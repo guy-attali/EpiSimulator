@@ -1,4 +1,5 @@
-from random import random
+# from random import random
+import random
 
 from core.person import Person
 from core.world import world
@@ -18,7 +19,7 @@ from utils.timeframe import TimeFrame
 
 
 def random_location():
-    return GeoLocation(random(), random())
+    return GeoLocation(random.random(), random.random())
 
 
 # @TODO: World building should be based on coded scenarios or configuration?
@@ -26,10 +27,12 @@ def random_location():
 def main():
     world.policies.append(TestPolicy())
 
-    household = world.sites.append(HouseholdSite(random_location()))
+    household = world.sites.append(HouseholdSite(random_location(), area=random.randint(40,100)))
     # can premake workplaces and then allocate people to them
-    workplace1 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.5)], [TestProcedureSite()]))
-    workplace2 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.2)], [TestProcedureSite()]))
+    workplace1 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.5)],
+                                                  [TestProcedureSite()], area=random.randint(100,600)))
+    workplace2 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.2)],
+                                                  [TestProcedureSite()], area=random.randint(100,600)))
 
     # decisions happen in order, should order decisions per all people?
     world.people.append(Person(
