@@ -3,7 +3,7 @@
 from enum import Enum
 
 
-class Trait:
+class SiteTrait:
     def __init__(self, initial_value=None):
         self.value = initial_value
 

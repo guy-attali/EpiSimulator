@@ -4,7 +4,7 @@ from core.world import world
 
 
 class Person:
-    def __init__(self, initial_traits: List = None, default_procedures: List = None):
+    def __init__(self, initial_traits: List = None, initial_procedures: List = None):
         self.uuid = world.next_entity_id()
 
         self.traits = {}
@@ -15,7 +15,7 @@ class Person:
         for trait in initial_traits:
             self.add_trait(trait)
 
-        for decision in default_procedures:
+        for procedure in initial_procedures:
             self.add_procedure(decision)
 
     def add_trait(self, trait):

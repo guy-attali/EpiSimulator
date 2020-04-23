@@ -1,8 +1,8 @@
-from policies.base import Policy, DecoratedProcedure
+from policies.base import Policy, DecoratedPersonProcedure, DecoratedSiteProcedure
 from procedures.go_home import GoHomeProcedure
 
 
-class DecoratedProcedureGoHome(DecoratedProcedure):
+class DecoratedProcedureGoHome(DecoratedPersonProcedure):
     def should_apply(self, person):
         return self.decorated_procedure.should_apply(person)
 
@@ -11,6 +11,9 @@ class DecoratedProcedureGoHome(DecoratedProcedure):
 
 
 class TestPolicy(Policy):
+    def decorate_site_procedure(self, procedure):
+        return procedure
+
     def decorate_procedure(self, procedure):
         if procedure.is_type(GoHomeProcedure):
             return DecoratedProcedureGoHome(procedure)

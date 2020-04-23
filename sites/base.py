@@ -22,13 +22,31 @@ class GeoLocation:
 
 
 class Site:
-    def __init__(self, location: GeoLocation, traits = []):
+    def __init__(self, location: GeoLocation, initial_traits = [], initial_procedures = []):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.traits = traits
+        self.traits = []
+        self.procedures = []
+
+        for trait in initial_traits:
+            self.add_trait(trait)
+
+        for procedure in initial_procedures:
+            self.add_procedure(decision)
+
+    def add_trait(self, trait):
+        self.traits[trait.c] = trait
+
+    def add_procedure(self, procedure, index=None):
+        index = index or len(self.procedures)
+
+        for policy in world.policies:
+            procedure = policy.decorate_site_procedure(procedure)
+
+        self.procedures.insert(index, procedure)
 
     def enter(self, person: Person):
         self.people[person] = world.current_ts
