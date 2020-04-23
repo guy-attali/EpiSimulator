@@ -22,12 +22,13 @@ class GeoLocation:
 
 
 class Site:
-    def __init__(self, location: GeoLocation):
+    def __init__(self, location: GeoLocation, traits = []):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
+        self.traits = traits
 
     def enter(self, person: Person):
         self.people[person] = world.current_ts
