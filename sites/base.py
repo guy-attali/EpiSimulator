@@ -43,5 +43,8 @@ class Site:
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
 
+    def tick(self):
+        pass
+
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])

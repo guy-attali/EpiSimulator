@@ -19,6 +19,9 @@ class World:
         for person in self.people:
             person.tick()
 
+        for site in self.sites:
+            site.tick()
+
         for policy in self.policies:
             policy.world_posttick()
 
