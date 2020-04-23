@@ -23,8 +23,7 @@ class GeoLocation:
 
 
 class Site:
-    def __init__(self, location: GeoLocation, initial_traits=None, initial_procedures=None, area: int = None,
-                 dispersion_factor: float = 1.0):
+    def __init__(self, location: GeoLocation, initial_traits=None, initial_procedures=None):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
@@ -32,9 +31,6 @@ class Site:
         self.log = []  # has a point?
         self.traits = initial_traits
         self.procedures = []
-        self.area = area
-        self.dispersion_factor = dispersion_factor
-
         initial_procedures = initial_procedures or []
         for procedure in initial_procedures:
             self.add_procedure(procedure)

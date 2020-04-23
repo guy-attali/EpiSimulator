@@ -70,7 +70,7 @@ class MeetingProcedureSite(SiteProcedure):
         if len(site.people) < 2:
             return 0
         else:
-            m_p = (len(site.people)*time_step/site.area)*site.dispersion_factor
+            m_p = (len(site.people)*time_step/site.traits.area)*site.traits.dispersion_factor
             return m_p if m_p < 1 else 1
 
     def should_apply(self, site: Site) -> bool:

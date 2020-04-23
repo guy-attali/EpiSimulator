@@ -36,13 +36,13 @@ def main():
     workplace1 = world.sites.append(
         WorkplaceSite(
             random_location(),
-            SiteTraits({ "infection_factor": 1.5, "area": random.randint(100,600) }),
+            SiteTraits({ "infection_factor": 1.5, "dispersion_factor": 1.0, "area": random.randint(100,600) }),
             [MeetingProcedureSite()]))
 
     workplace2 = world.sites.append(
         WorkplaceSite(
             random_location(),
-            SiteTraits({ "infection_factor": 1.5, "area": random.randint(100,600) }),
+            SiteTraits({ "infection_factor": 1.5, "dispersion_factor": 1.0, "area": random.randint(100,600) }),
             [MeetingProcedureSite()])) 
 
     # decisions happen in order, should order decisions per all people?
