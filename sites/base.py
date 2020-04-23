@@ -6,7 +6,6 @@ import random
 
 from core.person import Person
 from core.world import world
-from traits.base import Trait, SITE_TRAIT_TYPE
 
 
 class GeoLocation:
@@ -31,21 +30,14 @@ class Site:
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.traits: Dict[SITE_TRAIT_TYPE, Trait] = {}
+        self.traits = initial_traits
         self.procedures = []
         self.area = area
         self.dispersion_factor = dispersion_factor
 
-        initial_traits = initial_traits or []
-        for trait in initial_traits:
-            self.add_trait(trait)
-
         initial_procedures = initial_procedures or []
         for procedure in initial_procedures:
             self.add_procedure(procedure)
-
-    def add_trait(self, trait):
-        self.traits[trait.c] = trait
 
     def add_procedure(self, procedure, index=None):
         index = index or len(self.procedures)

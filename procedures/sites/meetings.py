@@ -2,8 +2,6 @@ from procedures.base import SiteProcedure
 from core.world import world
 from sites.base import Site
 
-from traits.base import PERSON_TRAIT_TYPE
-
 
 class Meeting:
     """
@@ -40,9 +38,8 @@ class Meeting:
         checks if one of the people in the meeting is infected.
         :return boolean
         """
-        return self._people_involved[1].traits[PERSON_TRAIT_TYPE.INFECTED] or\
-               self._people_involved[0].traits[PERSON_TRAIT_TYPE.INFECTED]
-
+        return self._people_involved[1].traits.infected or\
+               self._people_involved[0].traits.infected
 
 class MeetingProcedureSite(SiteProcedure):
     def apply(self, site: Site):

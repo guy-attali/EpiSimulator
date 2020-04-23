@@ -1,27 +1,19 @@
-# traits/__init__.py
-# traits/base.py ?
-from abc import abstractmethod
-from enum import Enum
+class Traits():
+    def __init__ (self, initial_values):
+        for name, value in initial_values.items():
+            self[name] = value
 
+    def __getattribute__(self, name):
+        if name not in super().__getattribute__("allowed_traits"):
+            raise NotImplementedError('unknown trait ' + name)
+        return super().__getattribute__(name)
 
-class Trait:
-    def __init__(self, initial_value=None):
-        self.value = initial_value
+    def __setattr__(self, name, value):
+        if name not in super().__getattribute__("allowed_traits"):
+            raise NotImplementedError('unknown trait ' + name)
+        return super().__setattr__(name, value)
 
-    def __eq__(self, other):
-        if isinstance(other, Trait):
-            return self.value is other.value
-        return self.value is other
-
-    def __bool__(self):
-        return self.value is True
-
-
-class PERSON_TRAIT_TYPE(Enum):
-    INFECTED = 1
-    SEX = 51
-    AGE = 52
-
-
-class SITE_TRAIT_TYPE(Enum):
-    INTERACTION_FACTOR = 1
+    def __setitem__(self, name, value):
+        if name not in super().__getattribute__("allowed_traits"):
+            raise NotImplementedError('unknown trait ' + name)
+        return super().__setattr__(name, value)
