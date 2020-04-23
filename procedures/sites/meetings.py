@@ -57,8 +57,8 @@ class MeetingProcedureSite(SiteProcedure):
       if meeting_probability > 0:
           for id, person1 in site.people:
               if random.uniform(0, 1) <= meeting_probability:
-                  person2 = random.choice([person for person in self.get_peoples() if person != person1])
-                  meeting = Meeting(person1=person1, person2=person2, site=self)
+                  person2 = random.choice([person for person in site.get_peoples() if person != person1])
+                  meeting = Meeting(person1=person1, person2=person2, site=site)
                   meetings.append(meeting)
 
       return meetings
