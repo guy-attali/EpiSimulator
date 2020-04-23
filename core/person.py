@@ -5,7 +5,6 @@ from core.world import world
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
-
 class Person:
     def __init__(self, initial_traits: List = None, initial_procedures: List = None):
         self.uuid = world.next_entity_id()

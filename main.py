@@ -14,7 +14,7 @@ from sites.workplace import WorkplaceSite
 from traits.person.age import TraitAge
 from traits.person.sex import TraitSex, SEX
 from traits.sites.interaction_factor import SiteTraitInfectionFactor
-from procedures.sites.test import TestProcedureSite
+from procedures.sites.meetings import MeetingProcedureSite
 from utils.timeframe import TimeFrame
 
 
@@ -30,9 +30,9 @@ def main():
     household = world.sites.append(HouseholdSite(random_location(), area=random.randint(40,100)))
     # can premake workplaces and then allocate people to them
     workplace1 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.5)],
-                                                  [TestProcedureSite()], area=random.randint(100,600)))
+                                                  [MeetingProcedureSite()], area=random.randint(100,600)))
     workplace2 = world.sites.append(WorkplaceSite(random_location(), [SiteTraitInfectionFactor(1.2)],
-                                                  [TestProcedureSite()], area=random.randint(100,600)))
+                                                  [MeetingProcedureSite()], area=random.randint(100,600)))
 
     # decisions happen in order, should order decisions per all people?
     world.people.append(Person(

@@ -6,7 +6,6 @@ import random
 
 from core.person import Person
 from core.world import world
-from core.meetings import Meeting
 from traits.base import Trait, SITE_TRAIT_TYPE
 
 
@@ -34,8 +33,8 @@ class Site:
         self.log = []  # has a point?
         self.traits: Dict[SITE_TRAIT_TYPE, Trait] = {}
         self.procedures = []
-        self._area = area
-        self._dispersion_factor = dispersion_factor
+        self.area = area
+        self.dispersion_factor = dispersion_factor
 
         initial_traits = initial_traits or []
         for trait in initial_traits:
@@ -70,39 +69,11 @@ class Site:
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
 
-    def calculate_meeting_probability(self, time_step):
-        """
-        calculates the meeting probabilty in a 'Site' in a certain moment.
-        multiplying the number of people in square meters with the dispersion factor.
-        the meeting probability is in scale of 0 to 1.
-        :param time_step - the time intervals
-        """
-        if len(self.people) < 2:
-            return 0
-        else:
-            m_p = (len(self.people)*time_step/self._area)*self._dispersion_factor
-            return m_p if m_p < 1 else 1
-
-    def create_meetings(self):
-        """
-        checks for meetings randomly using the meeting probability.
-        if the randomized number is in the range of the meeting probability a 'Meeting' object is created.
-        :return list of meetings that occured in the 'Site'.
-                if no meetings were created returns an empty list.
-        """
-        meetings = []
-        meeting_probability = self.calculate_meeting_probability(time_step=world.time_step)
-        if meeting_probability > 0:
-            for i in range(len(self.people)):
-                if random.uniform(0, 1) <= meeting_probability:
-                    person1 = self.get_peoples()[i]
-                    person2 = random.choice([person for person in self.get_peoples() if person != person1])
-                    meeting = Meeting(person1=person1, person2=person2, site=self)
-                    meetings.append(meeting)
-        return meetings
-
     def tick(self):
-        meetings = self.create_meetings()
+        for procedure in self.procedures:
+            if procedure.should_apply(self):
+                procedure.apply(self)
+
 
 
 
