@@ -6,8 +6,8 @@ class Meeting:
     """
     Represents a single Meeting between two or more people
     """
-    def __init__(self, person1, person2, site):
-        self._time = world.current_ts
+    def __init__(self, person1, person2, site, timestamp):
+        self._time = timestamp
         self._people_involved = [person1, person2]
         self._location = site
 
@@ -55,7 +55,12 @@ class MeetingProcedureSite(SiteProcedure):
           for id, person1 in site.people:
               if random.uniform(0, 1) <= meeting_probability:
                   person2 = random.choice([person for person in site.get_peoples() if person != person1])
-                  meeting = Meeting(person1=person1, person2=person2, site=site)
+                  meeting = Meeting(
+                      person1=person1,
+                      person2=person2,
+                      site=site,
+                      timestamp=world.current_tf.sample_random_timestamp()
+                  )
                   meetings.append(meeting)
 
       return meetings
