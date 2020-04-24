@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from utils.timeframe import TimeFrame
 
 class World:
     def __init__(self):
@@ -8,8 +8,8 @@ class World:
         self.sites = []
         self.policies = []
         self.current = 0
-        self.current_ts = datetime(2020, 3, 1, 0, 0)
         self.time_step = timedelta(minutes=5)
+        self.current_tf = TimeFrame(datetime(2020, 3, 1, 0, 0),self.time_step)
         self.autoinc_entity_id = 0
 
     def tick(self):
@@ -26,7 +26,7 @@ class World:
             policy.world_posttick()
 
         self.current += 1
-        self.current_ts = self.current_ts + self.time_step
+        self.current_tf = self.current_tf + self.time_step
 
     def next_entity_id(self):
         self.UUID += 1
