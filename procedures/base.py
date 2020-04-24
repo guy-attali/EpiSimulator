@@ -1,6 +1,6 @@
 import abc
 
-from core.person import Person
+from people.person import Person
 from sites.base import Site
 
 

@@ -1,6 +1,5 @@
-from core.person import Person
+from people.person import Person
 from procedures.base import PersonProcedure
-from traits.person.infected import TraitInfected
 
 
 class GetTestedProcedure(PersonProcedure):
@@ -9,4 +8,4 @@ class GetTestedProcedure(PersonProcedure):
         return False
 
     def apply(self, person: Person):
-        person.add_trait(TraitInfected(True))
+        person.infected = True

@@ -2,11 +2,10 @@
 import math
 from collections import namedtuple
 from typing import Dict, List
-import random
 
-from core.person import Person
+from people.person import Person
 from core.world import world
-from traits.base import Trait, SITE_TRAIT_TYPE
+from core.base_objects import ObjectWithAcquiredTraits
 
 
 class GeoLocation:
@@ -23,29 +22,33 @@ class GeoLocation:
         return math.sqrt(x_distance ** 2 + y_distance ** 2)
 
 
-class Site:
-    def __init__(self, location: GeoLocation, initial_traits=None, initial_procedures=None, area: int = None,
-                 dispersion_factor: float = 1.0):
+class Site(ObjectWithAcquiredTraits):
+    def __init__(self, location: GeoLocation, area: float, dispersion_factor: float, meeting_probability:float, nominal_capacity:int):
+        ObjectWithAcquiredTraits.__init__(self)
+
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.traits: Dict[SITE_TRAIT_TYPE, Trait] = {}
         self.procedures = []
+
+
+        # the "effective" area, in meters squared, of the site.
         self.area = area
+
+        # the typical maximal number of people that the site can contain
+        self.nominal_capacity = nominal_capacity
+
+        # this value determines the tendency of people in the site to move around
+        # (lower values mean that people are relatively static)
         self.dispersion_factor = dispersion_factor
 
-        initial_traits = initial_traits or []
-        for trait in initial_traits:
-            self.add_trait(trait)
+        # the probability of creating a meeting, depending on the area, number of people in the site
+        # and the dispersion factor of the site
+        # TODO: the right magnitude should be meeting probability per unit time
+        self.meeting_probability = meeting_probability
 
-        initial_procedures = initial_procedures or []
-        for procedure in initial_procedures:
-            self.add_procedure(procedure)
-
-    def add_trait(self, trait):
-        self.traits[trait.c] = trait
 
     def add_procedure(self, procedure, index=None):
         index = index or len(self.procedures)

@@ -1,7 +1,7 @@
 # from random import random
 import random
 
-from core.person import Person
+from people.person import Person
 from core.world import world
 from policies.test import TestPolicy
 from procedures.person.evaluate_site_infection import EvaluateSiteInfectionProcedure
@@ -11,9 +11,6 @@ from procedures.person.go_work import GoWorkProcedure
 from sites.base import GeoLocation
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
-from traits.person.age import TraitAge
-from traits.person.sex import TraitSex, SEX
-from traits.sites.interaction_factor import SiteTraitInfectionFactor
 from procedures.sites.meetings import MeetingProcedureSite
 from utils.timeframe import TimeFrame
 

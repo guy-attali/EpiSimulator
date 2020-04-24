@@ -1,6 +1,6 @@
 from enum import Enum
 
-from core.person import Person
+from people.person import Person
 from core.world import world
 from procedures.base import PersonProcedure
 from sites.base import Site
