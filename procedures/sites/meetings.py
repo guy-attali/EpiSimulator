@@ -1,3 +1,4 @@
+import random
 from procedures.base import SiteProcedure
 from core.world import world
 from sites.base import Site
@@ -53,7 +54,7 @@ class MeetingProcedureSite(SiteProcedure):
       meeting_probability = self.calculate_meeting_probability(site, time_step=world.time_step)
       if meeting_probability > 0:
           for id, person1 in site.people:
-              if random.uniform(0, 1) <= meeting_probability:
+              if random.random() <= meeting_probability:
                   person2 = random.choice([person for person in site.get_peoples() if person != person1])
                   meeting = Meeting(
                       person1=person1,
