@@ -30,3 +30,10 @@ class TimeFrame:
     def __isub__(self, delta: timedelta):
         self.start -= delta
         self.end -= delta
+
+    def overlap(self, other_timeframe):
+        if other_timeframe.start >= self.end:
+            return 0.0
+        if other_timeframe.end <= self.start:
+            return 0.0
+        return (min(self.end, other_timeframe.end) - max(self.start, other_timeframe.start))/self.duration
