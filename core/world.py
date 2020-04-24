@@ -14,16 +14,16 @@ class World:
 
     def tick(self):
         for policy in self.policies:
-            policy.world_pretick()
+            policy.world_pretick(self.current_tf)
 
         for person in self.people:
-            person.tick()
+            person.tick(self.current_tf)
 
         for site in self.sites:
-            site.tick()
+            site.tick(self.current_tf)
 
         for policy in self.policies:
-            policy.world_posttick()
+            policy.world_posttick(self.current_tf)
 
         self.current += 1
         self.current_tf = self.current_tf + self.time_step

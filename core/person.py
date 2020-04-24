@@ -43,7 +43,7 @@ class Person:
         self._current_site = other_site
         self._current_site.enter(self)
 
-    def tick(self):
+    def tick(self, timeframe):
         for procedure in self.procedures:
             if procedure.should_apply(self):
                 procedure.apply(self)

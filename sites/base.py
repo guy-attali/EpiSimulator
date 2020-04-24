@@ -69,7 +69,7 @@ class Site:
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
 
-    def tick(self):
+    def tick(self, timeframe):
         for procedure in self.procedures:
             if procedure.should_apply(self):
                 procedure.apply(self)
