@@ -3,14 +3,30 @@ from typing import Union
 
 
 class TimeFrame:
-    def __init__(self, start, i: Union[datetime, timedelta]):
+    def __init__(self, start: datetime, i: Union[datetime, timedelta]):
         self.start = start
         if isinstance(i, datetime):
             self.end = i
-            self.duration = self.end - self.start
         elif isinstance(i, timedelta):
-            self.duration = i
-            self.end = self.start + self.duration
+            self.end = self.start + i
+
+    @property
+    def duration(self):
+        return self.end - self.start
 
     def within(self, timestamp: datetime):
-        return self.start <= timestamp <= self.end
+        return self.start <= timestamp < self.end
+
+    def __add__(self, delta: timedelta):
+        return TimeFrame(self.start+delta, self.end+delta)
+
+    def __sub__(self, delta: timedelta):
+        return TimeFrame(self.start-delta, self.end-delta)
+
+    def __iadd__(self, delta: timedelta):
+        self.start += delta
+        self.end += delta
+
+    def __isub__(self, delta: timedelta):
+        self.start -= delta
+        self.end -= delta
