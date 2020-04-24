@@ -2,16 +2,16 @@ from collections import namedtuple
 from typing import List
 
 from core.world import world
-from traits.base import Traits
+from traits.base import RestrictTraits, PERSON_TRAITS
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
 
-class Person:
-    def __init__(self, initial_traits: Traits = None, initial_procedures: List = None):
+class Person(RestrictTraits):
+    def __init__(self, initial_procedures: List = None, **kwargs):
+        super().__init__(**kwargs)
         self.uuid = world.next_entity_id()
 
-        self.traits = initial_traits
         self.procedures = []
         self._commute_history = []
         self._current_site = None
@@ -46,3 +46,6 @@ class Person:
 
     def __hash__(self) -> int:
         return self.uuid
+
+    def _attribute_allowed(self, name):
+        return name in PERSON_TRAITS

@@ -13,7 +13,6 @@ from procedures.sites.meetings import MeetingProcedureSite
 from sites.base import GeoLocation
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
-from traits.base import Traits
 from utils.timeframe import TimeFrame
 
 
@@ -29,36 +28,36 @@ def main():
     household = world.sites.append(
         HouseholdSite(
             random_location(),
-            Traits(area=random.randint(40, 100))))
+            area=random.randint(40, 100)))
 
     # can premake workplaces and then allocate people to them
     workplace1 = world.sites.append(
         WorkplaceSite(
             random_location(),
-            Traits(infection_factor=1.5, dispersion_factor=1.0, area=random.randint(100, 600)),
-            [MeetingProcedureSite()]))
+            [MeetingProcedureSite()],
+            infection_factor=1.5, dispersion_factor=1.0, area=random.randint(100, 600)))
 
     workplace2 = world.sites.append(
         WorkplaceSite(
             random_location(),
-            Traits(infection_factor=1.5, dispersion_factor=1.0, area=random.randint(100, 600)),
-            [MeetingProcedureSite()]))
+            [MeetingProcedureSite()],
+            infection_factor=1.5, dispersion_factor=1.0, area=random.randint(100, 600)))
 
     # decisions happen in order, should order decisions per all people?
     world.people.append(Person(
-        Traits(sex=SEX.MALE, age=30),
         [
             GetTestedProcedure(),
             GoHomeProcedure(household, TimeFrame(1, 2)),
             GoWorkProcedure(workplace1, TimeFrame(1, 2)),
             EvaluateSiteInfectionProcedure()
-        ]))
-    world.people.append(Person(
-        Traits(sex=SEX.MALE, age=30),
-        [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)),
-         GoWorkProcedure(workplace2, TimeFrame(1, 2)),
-         EvaluateSiteInfectionProcedure()]
-    ))
+        ], sex=SEX.MALE, age=30)),
+    world.people.append(
+        Person(
+            [GetTestedProcedure(), GoHomeProcedure(household, TimeFrame(1, 2)),
+             GoWorkProcedure(workplace2, TimeFrame(1, 2)),
+             EvaluateSiteInfectionProcedure()],
+            sex=SEX.MALE, age=30)
+    )
 
     world.tick()
 

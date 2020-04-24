@@ -1,12 +1,10 @@
 # use an actual spatial map?
 import math
-from collections import namedtuple
 from typing import Dict, List
-import random
 
 from core.person import Person
 from core.world import world
-from traits.base import Traits
+from traits.base import RestrictTraits, SITE_TRAITS
 
 
 class GeoLocation:
@@ -23,18 +21,19 @@ class GeoLocation:
         return math.sqrt(x_distance ** 2 + y_distance ** 2)
 
 
-class Site:
-    def __init__(self, location: GeoLocation, initial_traits: Traits=None, initial_procedures=None):
+class Site(RestrictTraits):
+    def __init__(self, location: GeoLocation, initial_procedures=None, **kwargs):
+        super().__init__(**kwargs)
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.traits = initial_traits
         self.procedures = []
         initial_procedures = initial_procedures or []
         for procedure in initial_procedures:
             self.add_procedure(procedure)
+
 
     def add_procedure(self, procedure, index=None):
         index = index or len(self.procedures)
@@ -63,7 +62,5 @@ class Site:
             if procedure.should_apply(self):
                 procedure.apply(self)
 
-
-
-
-SiteLog = namedtuple('SiteLog', ['site', 'time'])
+    def _attribute_allowed(self, name):
+        return name in SITE_TRAITS
