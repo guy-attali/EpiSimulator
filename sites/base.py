@@ -6,6 +6,7 @@ import random
 
 from core.person import Person
 from core.world import world
+from traits.base import Traits
 
 
 class GeoLocation:
@@ -23,7 +24,7 @@ class GeoLocation:
 
 
 class Site:
-    def __init__(self, location: GeoLocation, initial_traits=None, initial_procedures=None):
+    def __init__(self, location: GeoLocation, initial_traits: Traits=None, initial_procedures=None):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location

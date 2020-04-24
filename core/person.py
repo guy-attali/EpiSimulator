@@ -2,11 +2,13 @@ from collections import namedtuple
 from typing import List
 
 from core.world import world
+from traits.base import Traits
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
+
 class Person:
-    def __init__(self, initial_traits: List = None, initial_procedures: List = None):
+    def __init__(self, initial_traits: Traits = None, initial_procedures: List = None):
         self.uuid = world.next_entity_id()
 
         self.traits = initial_traits
