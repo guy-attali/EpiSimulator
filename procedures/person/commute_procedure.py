@@ -1,4 +1,7 @@
+from typing import Optional, Union, Iterable, Tuple
 from enum import Enum
+from datetime import timedelta
+import random
 
 from people.person import Person
 from core.world import world
@@ -15,20 +18,72 @@ class COMMUTE_STATE(Enum):
 
 
 class CommuteProcedure(PersonProcedure):
-    def __init__(self, dest_site: Site, timeframe):
-        self.dest_site: Site = dest_site
-        self.timeframe: TimeFrame = timeframe
+    def __init__(
+            self,
+            destination_sites: Union[Site, Iterable[Site]],
+            initial_sites: Optional[Union[Site, Iterable[Site]]] = None,
+            days: Optional[int,Iterable[int]] = None,
+            time_in_day_interval: Optional[Tuple[timedelta, timedelta]] = None,
+            time_in_site: Optional[timedelta] = None,
+            probability_per_minute = 1.0
+    ):
+        self.dest_sites = destination_sites
+        self.initial_sites = initial_sites
+        self.days = days
+        self.time_in_day_interval = time_in_day_interval
+        self.time_in_site = time_in_site
+        self.probability_per_minute = probability_per_minute
+
         self.commute_state: COMMUTE_STATE = COMMUTE_STATE.PREVIOUS_DEST
         # self.commuting_eta_tick = None
 
     def should_apply(self, person: Person) -> bool:
-        return self.timeframe.within(world.current)
+
+        # check condition for initial location
+        if self.initial_sites is not None:
+            if isinstance(self.initial_sites, Site):
+                if person.site is not self.initial_sites:
+                    return False
+                else:
+                    if person.site not in self.initial_sites:
+                        return False
+
+        # check condition for day of weak
+        if self.days is not None:
+            current_day = world.current_tf.start.weekday
+            if isinstance(self.days, int):
+                if current_day != self.days:
+                    return False
+                else:
+                    if current_day not in self.days:
+                        return False
+
+        # check condition for time of day
+        if self.time_in_day_interval is not None:
+            start_of_today = world.current_tf.start.replace(hour=0, minute=0, second=0, microsecond=0)
+            dt1 = self.time_in_day_interval[0]
+            dt2 = self.time_in_day_interval[1]
+            timeframe = TimeFrame(start_of_today+dt1, start_of_today+dt2)
+            if world.current_tf.overlap(timeframe) == 0.0:
+                return False
+
+        # check condition for total time in current site
+        if self.time_in_site is not None:
+            time_in_site = world.current_tf.start - person.timestamp_arrived
+            if time_in_site < self.time_in_site:
+                return False
+
+        # randomly decide whether the pattern will be executed
+        if random.random() > ((world.current_tf.duration.total_seconds()/60) * self.probability_per_minute):
+            return False
+        
+        return True
 
     def apply(self, person: Person):
         # if within travel time?
         # add policy hook?
         # should decide on a transport site here instead of as a static?
-        if self.commute_state is COMMUTE_STATE.ARRIVED and not person.current_site.equals(self.dest_site):
+        if self.commute_state is COMMUTE_STATE.ARRIVED and not person.site is self.dest_site:
             self.commute_state = COMMUTE_STATE.PREVIOUS_DEST  # reset
 
         if self.commute_state is COMMUTE_STATE.PREVIOUS_DEST:
