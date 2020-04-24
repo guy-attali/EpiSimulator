@@ -71,7 +71,7 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
     def site(self):
         return self.current_site
 
-    @property.setter
+    @site.setter
     def site(self, new_site):
         if new_site is not self.current_site:
             self._commute_history.append(SiteLog(self.current_site, world.current))
@@ -79,6 +79,7 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
         self.current_site = new_site
         new_site.enter(self)
+        self.timestamp_arrived = world.current_tf.start
 
     def __hash__(self) -> int:
         return self.uuid
