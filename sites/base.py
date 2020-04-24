@@ -2,6 +2,7 @@
 import math
 from collections import namedtuple
 from typing import Dict, List
+from datetime import timedelta
 
 from people.person import Person
 from core.world import world
@@ -28,7 +29,6 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
             location: GeoLocation,
             area: float,
             dispersion_factor: float,
-            meeting_probability:float,
             nominal_capacity:int
     ):
         ObjectWithAcquiredTraits.__init__(self)
@@ -51,11 +51,6 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
         # (lower values mean that people are relatively static)
         self.dispersion_factor = dispersion_factor
 
-        # the probability of creating a meeting, depending on the area, number of people in the site
-        # and the dispersion factor of the site
-        # TODO: the right magnitude should be meeting probability per unit time
-        self.meeting_probability = meeting_probability
-
     def enter(self, person: Person):
         self.people[person] = world.current_ts
 
@@ -69,6 +64,19 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
+
+    def meeting_probability(self, time_step:timedelta):
+        """
+        calculates the meeting probabilty in a 'Site' in a certain moment.
+        multiplying the number of people in square meters with the dispersion factor.
+        the meeting probability is in scale of 0 to 100.
+        """
+        num_people = len(self.people)
+        if num_people  < 2:
+            return 0.0
+        else:
+            m_p = (num_people*(time_step.total_seconds()/60)/self.area)*self.dispersion_factor
+            return min(m_p, 1.0)
 
 
 
