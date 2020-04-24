@@ -8,4 +8,4 @@ class TraitAge(Trait):
         super(TraitAge, self).__init__(age)
 
     def within(self, start, end):
-        return start < self.value < end
+        return start <= self.value < end
