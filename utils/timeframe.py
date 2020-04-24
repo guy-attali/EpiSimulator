@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Union
+import random
 
 
 class TimeFrame:
@@ -37,3 +38,6 @@ class TimeFrame:
         if other_timeframe.end <= self.start:
             return 0.0
         return (min(self.end, other_timeframe.end) - max(self.start, other_timeframe.start))/self.duration
+
+    def sample_random_timestamp(self):
+        return self.start + self.duration*random.random()
