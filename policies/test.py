@@ -6,9 +6,6 @@ class DecoratedProcedureGoHome(DecoratedPersonProcedure):
     def should_apply(self, person):
         return self.decorated_procedure.should_apply(person)
 
-    def apply(self, person):
-        return self.decorated_procedure.apply(person)
-
 
 class TestPolicy(Policy):
     def decorate_site_procedure(self, procedure):
