@@ -10,13 +10,6 @@ from sites.base import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame
 
-
-class COMMUTE_STATE(Enum):
-    PREVIOUS_DEST = 1
-    COMMUTING = 2
-    ARRIVED = 3
-
-
 class CommuteProcedure(PersonProcedure):
     def __init__(
             self,
@@ -33,9 +26,6 @@ class CommuteProcedure(PersonProcedure):
         self.time_in_day_interval = time_in_day_interval
         self.time_in_site = time_in_site
         self.probability_per_minute = probability_per_minute
-
-        self.commute_state: COMMUTE_STATE = COMMUTE_STATE.PREVIOUS_DEST
-        # self.commuting_eta_tick = None
 
     def should_apply(self, person: Person) -> bool:
 
@@ -76,26 +66,14 @@ class CommuteProcedure(PersonProcedure):
         # randomly decide whether the pattern will be executed
         if random.random() > ((world.current_tf.duration.total_seconds()/60) * self.probability_per_minute):
             return False
-        
+
         return True
 
     def apply(self, person: Person):
-        # if within travel time?
-        # add policy hook?
-        # should decide on a transport site here instead of as a static?
-        if self.commute_state is COMMUTE_STATE.ARRIVED and not person.site is self.dest_site:
-            self.commute_state = COMMUTE_STATE.PREVIOUS_DEST  # reset
+        person.site = self._get_destination()
 
-        if self.commute_state is COMMUTE_STATE.PREVIOUS_DEST:
-            site_transport = self.find_transport(person)
-            self.commuting_eta_tick = site_transport.eta_tick(self.dest_site)
-            person.site = site_transport
-            self.commute_state = COMMUTE_STATE.COMMUTING
-        elif self.commute_state is COMMUTE_STATE.COMMUTING and (self.commuting_eta_tick >= world.current):
-            person.site = self.dest_site
-            self.commute_state = COMMUTE_STATE.ARRIVED
-
-        person.site = self.dest_site
-
-    def find_transport(self, person: Person) -> TransportSite:
-        return TransportSite()
+    def _get_destination(self):
+        if isinstance(self.dest_sites, Site):
+            return self.dest_sites
+        else:
+            return random.choice(self.dest_sites)
