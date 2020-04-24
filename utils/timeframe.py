@@ -15,7 +15,7 @@ class TimeFrame:
     def duration(self):
         return self.end - self.start
 
-    def within(self, timestamp: datetime):
+    def __contains__(self, timestamp: datetime):
         return self.start <= timestamp < self.end
 
     def __add__(self, delta: timedelta):
