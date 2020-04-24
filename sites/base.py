@@ -5,7 +5,7 @@ from typing import Dict, List
 
 from people.person import Person
 from core.world import world
-from core.base_objects import ObjectWithAcquiredTraits
+from core.base_objects import ObjectWithAcquiredTraits, ObjectWithProcedures
 
 
 class GeoLocation:
@@ -22,16 +22,23 @@ class GeoLocation:
         return math.sqrt(x_distance ** 2 + y_distance ** 2)
 
 
-class Site(ObjectWithAcquiredTraits):
-    def __init__(self, location: GeoLocation, area: float, dispersion_factor: float, meeting_probability:float, nominal_capacity:int):
+class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
+    def __init__(
+            self,
+            location: GeoLocation,
+            area: float,
+            dispersion_factor: float,
+            meeting_probability:float,
+            nominal_capacity:int
+    ):
         ObjectWithAcquiredTraits.__init__(self)
+        ObjectWithProcedures.__init__(self)
 
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
         self.people: Dict[Person, int] = {}
         self.log = []  # has a point?
-        self.procedures = []
 
 
         # the "effective" area, in meters squared, of the site.
@@ -49,15 +56,6 @@ class Site(ObjectWithAcquiredTraits):
         # TODO: the right magnitude should be meeting probability per unit time
         self.meeting_probability = meeting_probability
 
-
-    def add_procedure(self, procedure, index=None):
-        index = index or len(self.procedures)
-
-        for policy in world.policies:
-            procedure = policy.decorate_site_procedure(procedure)
-
-        self.procedures.insert(index, procedure)
-
     def enter(self, person: Person):
         self.people[person] = world.current_ts
 
@@ -71,11 +69,6 @@ class Site(ObjectWithAcquiredTraits):
 
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
-
-    def tick(self, timeframe):
-        for procedure in self.procedures:
-            if procedure.should_apply(self):
-                procedure.apply(self)
 
 
 

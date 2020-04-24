@@ -2,14 +2,14 @@ from collections import namedtuple
 from typing import List, Optional
 from datetime import datetime
 
-from core.base_objects import ObjectWithAcquiredTraits
+from core.base_objects import ObjectWithAcquiredTraits, ObjectWithProcedures
 from core.world import world
 from people.traits import Sex, Occupation
 from sites import household
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
-class Person(ObjectWithAcquiredTraits):
+class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
     def __init__(
             self,
             age: float,
@@ -26,6 +26,7 @@ class Person(ObjectWithAcquiredTraits):
             household: household
     ):
         ObjectWithAcquiredTraits.__init__(self)
+        ObjectWithProcedures.__init__(self)
 
         self.uuid = world.next_entity_id()
 
@@ -52,7 +53,6 @@ class Person(ObjectWithAcquiredTraits):
         # the houshold site where the person lives
         self.household = household
 
-        self.procedures = []
         self._commute_history = []
         self._current_site = household
 
@@ -67,14 +67,6 @@ class Person(ObjectWithAcquiredTraits):
                     (timestamp_symptomatic is not None) and
                     (timestamp_symptomatic >= timestamp_infected ))
 
-    def add_procedure(self, procedure, index=None):
-        index = index or len(self.procedures)
-
-        for policy in world.policies:
-            procedure = policy.decorate_procedure(procedure)
-
-        self.procedures.insert(index, procedure)
-
     @property
     def site(self):
         return self._current_site
@@ -86,11 +78,6 @@ class Person(ObjectWithAcquiredTraits):
 
         self._current_site = other_site
         self._current_site.enter(self)
-
-    def tick(self, timestamp):
-        for procedure in self.procedures:
-            if procedure.should_apply(self):
-                procedure.apply(self)
 
     def __hash__(self) -> int:
         return self.uuid

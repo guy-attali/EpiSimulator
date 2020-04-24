@@ -1,3 +1,5 @@
+from core.world import world
+
 class ObjectWithAcquiredTraits:
     def __init__(self):
         self._acquired_traits = {}
@@ -19,3 +21,21 @@ class ObjectWithAcquiredTraits:
     def add_trait(self, trait, value):
         if not self.has_trait(trait):
             self._acquired_traits[trait] = value
+
+
+class ObjectWithProcedures:
+    def __init__(self):
+        self.procedures = []
+
+    def add_procedure(self, procedure, index=None):
+        index = index or len(self.procedures)
+
+        for policy in world.policies:
+            procedure = policy.decorate_procedure(procedure)
+
+        self.procedures.insert(index, procedure)
+
+    def tick(self, timestamp):
+        for procedure in self.procedures:
+            if procedure.should_apply(self):
+                procedure.apply(self)
