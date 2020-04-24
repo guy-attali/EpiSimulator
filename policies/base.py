@@ -10,6 +10,12 @@ class _DecoratedProcedure:
     def is_type(self, instance_type):
         return self.decorated_procedure.is_type(instance_type)
 
+    def __getattr__(self, attr):
+        if attr in self.__dir__():
+            return attr
+        else:
+            return getattr(self.decorated_procedure, attr)
+
 
 class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
     pass
