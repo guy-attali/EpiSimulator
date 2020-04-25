@@ -8,9 +8,6 @@ class DecoratedProcedureGoHome(DecoratedPersonProcedure):
 
 
 class TestPolicy(Policy):
-    def decorate_site_procedure(self, procedure):
-        return procedure
-
     def decorate_procedure(self, procedure):
         if procedure.is_type(GoHomeProcedure):
             return DecoratedProcedureGoHome(procedure)

@@ -21,9 +21,6 @@ class StayHomeIfHasSymptoms(Policy):
         self.in_effect = False
         self.last_time_evaluated = None
 
-    def decorate_site_procedure(self, procedure):
-        return procedure
-
     def decorate_procedure(self, procedure):
         if procedure.is_type(CommuteProcedure):
             return DecoratedCommutingProcedure(procedure, self)
