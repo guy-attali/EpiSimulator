@@ -89,7 +89,7 @@ def setup_world():
         house.add_procedure(infect)
 
         to_hub, from_hub = get_hub_procedures(house)
-        age = 60 + np.random.exponential(7, 10000)
+        age = 60 + np.random.exponential(7)
 
         for _ in range(2):
             person = Person(
