@@ -9,7 +9,7 @@ class World:
         self.policies = []
         self.current = 0
         self.time_step = timedelta(minutes=5)
-        self.current_tf = TimeFrame(datetime(2020, 3, 1, 0, 0),self.time_step)
+        self.current_tf = TimeFrame(datetime(2020, 3, 1, 18, 0),self.time_step)
         self.autoinc_entity_id = 0
 
     def tick(self):
