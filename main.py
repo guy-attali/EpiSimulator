@@ -1,6 +1,6 @@
 from core.world import world
 from scenarios.scenario1 import setup_world
-from metrics import MetricManager
+from metrics.metrics_manager import MetricManager
 
 metrics = MetricManager()
 metrics_interval = 12
