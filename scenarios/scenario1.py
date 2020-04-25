@@ -103,7 +103,7 @@ def setup_world():
             if to_hub is not None:
                 person.add_procedure(to_hub)
                 person.add_procedure(from_hub)
-            person.add_procedure(IllnessProcedure)
+            person.add_procedure(IllnessProcedure())
 
             world.people.append(person)
 
