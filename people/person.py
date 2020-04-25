@@ -80,7 +80,7 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
         self.current_site = new_site
         new_site.enter(self)
-        self.timestamp_arrived = world.current_tf.start
+        self.timestamp_arrived = world.current_time
 
     def __hash__(self) -> int:
         return self.uuid

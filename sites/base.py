@@ -52,7 +52,7 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
         self.dispersion_factor = dispersion_factor
 
     def enter(self, person: Person):
-        self.people[person] = world.current_tf.start
+        self.people[person] = world.current_time
 
     def leave(self, person):
         if person not in self.people:

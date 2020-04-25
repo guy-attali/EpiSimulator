@@ -13,7 +13,7 @@ class IllnessProcedure(PersonProcedure):
     def should_apply(self, person: Person) -> bool:
         if not person.is_infected:
             return False
-        current_date = world.current_tf.start.date()
+        current_date = world.current_time.date()
         if (self.last_date_updated != current_date):
             self.last_date_updated = current_date
             return True
@@ -33,5 +33,5 @@ class IllnessProcedure(PersonProcedure):
                 person.symptoms_degree += random.uniform(0,person.age/400)
                 person.symptoms_degree = min(person.symptoms_degree,1.0)
                 if person.timestamp_symptomatic is None:
-                    person.timestamp_symptomatic = world.current_tf.start
+                    person.timestamp_symptomatic = world.current_time
 

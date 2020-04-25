@@ -32,6 +32,13 @@ class World:
         self.UUID += 1
         return self.UUID
 
+    @property
+    def current_time(self):
+        """
+        return the time of the beginning of current timeframe
+        """
+        return self.current_tf.start
+
     def get_future_tick(self, delta):
         return self.current + round(delta / self.time_step)
 

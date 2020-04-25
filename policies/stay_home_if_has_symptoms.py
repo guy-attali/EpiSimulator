@@ -31,7 +31,7 @@ class StayHomeIfHasSymptoms(Policy):
 
     def world_pretick(self):
         if (self.last_time_evaluated is None) or time_since(self.last_time_evaluated).total_seconds() > SECONDS_IN_WEEK:
-            self.last_time_evaluated = world.current_tf.start
+            self.last_time_evaluated = world.current_time
 
             num_people_with_symptoms = sum(person.symptoms_degree>0.2 for person in world.people)
 

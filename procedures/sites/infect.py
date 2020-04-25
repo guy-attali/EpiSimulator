@@ -41,7 +41,7 @@ class InfectProcedure(SiteProcedure):
             # perform infection
             if random.random() < person_infecting_score:
                 person.is_infected = True
-                person.timestamp_infected = world.current_tf.start
+                person.timestamp_infected = world.current_time
 
                 person.illness_degree = 1.0
                 if person.time_infected_minutes is None:

@@ -41,7 +41,7 @@ class CommuteProcedure(PersonProcedure):
 
         # check condition for day of weak
         if self.days is not None:
-            current_day = world.current_tf.start.weekday
+            current_day = world.current_time.weekday
             if isinstance(self.days, int):
                 if current_day != self.days:
                     return False
