@@ -14,8 +14,8 @@ from sites.base import GeoLocation
 from sites.base import Site
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
-from sites.school import School
-from sites.hub import Hub
+from sites.school import SchoolSite
+from sites.hub import HubSite
 from utils.time_utils import SECONDS_IN_WEEK
 
 def setup_world():
@@ -34,7 +34,7 @@ def setup_world():
     infect = InfectProcedure()
     illness = IllnessProcedure()
 
-    hub = Hub(
+    hub = HubSite(
         location=GeoLocation(-300.0, -300.0),
         area=500.0,
         dispersion_factor=1.0,
@@ -206,7 +206,7 @@ def setup_world():
     def create_schools():
         schools = []
         for _ in range(number_of_schools):
-            school = School(
+            school = SchoolSite(
                 location=GeoLocation(random.uniform(-300, 300),
                                      random.uniform(-300, 300)),
                 area=random.uniform(300, 1000),

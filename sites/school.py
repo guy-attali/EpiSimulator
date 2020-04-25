@@ -1,5 +1,5 @@
 from sites.base import Site
 
 
-class School(Site):
+class SchoolSite(Site):
     pass

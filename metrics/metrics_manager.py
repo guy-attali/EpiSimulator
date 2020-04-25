@@ -1,5 +1,5 @@
 from core.world import world
-from sites.hub import Hub
+from sites.hub import HubSite
 
 
 class MetricManager:
@@ -28,7 +28,7 @@ class MetricManager:
         for person in world.people:
             if person.site is person.household:
                 at_home += 1
-            elif isinstance(person.site, Hub):
+            elif isinstance(person.site, HubSite):
                 at_hub += 1
             else:
                 at_work_or_school += 1
