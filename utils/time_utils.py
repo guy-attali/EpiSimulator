@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from core.world import world
 
+SECONDS_IN_WEEK = 60*60*24*7
+
 def time_since(timestamp:datetime) -> timedelta:
     return world.current_tf.start - timestamp
 
