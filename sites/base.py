@@ -60,7 +60,7 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
         self.people.remove(person)
 
     def __contains__(self, person):
-        return person in self.people
+        return person.site is self
 
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
