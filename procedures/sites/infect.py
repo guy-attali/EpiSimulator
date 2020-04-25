@@ -26,7 +26,7 @@ class InfectProcedure(SiteProcedure):
                                density * \
                                ratio_of_capacity \
                                * site.dispersion_factor \
-                               / 50.0
+                               / 1000.0
         # for each person, calculate whether it got is_infected, or maybe even
         # healed
         for person in people:
