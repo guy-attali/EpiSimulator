@@ -9,6 +9,7 @@ from procedures.base import PersonProcedure
 from sites.base import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame
+from utils.time_utils import get_start_of_day, time_since
 
 class CommuteProcedure(PersonProcedure):
     def __init__(
@@ -50,7 +51,7 @@ class CommuteProcedure(PersonProcedure):
 
         # check condition for time of day
         if self.time_in_day_interval is not None:
-            start_of_today = world.current_tf.start.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_of_today = get_start_of_day()
             dt1 = self.time_in_day_interval[0]
             dt2 = self.time_in_day_interval[1]
             timeframe = TimeFrame(start_of_today+dt1, start_of_today+dt2)
@@ -59,7 +60,7 @@ class CommuteProcedure(PersonProcedure):
 
         # check condition for total time in current site
         if self.time_in_site is not None:
-            time_in_site = world.current_tf.start - person.timestamp_arrived
+            time_in_site = time_since(person.timestamp_arrived)
             if time_in_site < self.time_in_site:
                 return False
 
