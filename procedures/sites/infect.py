@@ -21,7 +21,7 @@ class InfectProcedure(SiteProcedure):
 
         # from these variables, get a "score" for the site, where a high score
         # means higher chance if infection
-        site_infecting_score = world.current_tf.duration * \
+        site_infecting_score = (world.current_tf.duration.total_seconds()/60) * \
                                ratio_of_ill_people * \
                                density * \
                                ratio_of_capacity \
@@ -42,7 +42,3 @@ class InfectProcedure(SiteProcedure):
             if random.random() < person_infecting_score:
                 person.is_infected = True
                 person.timestamp_infected = world.current_time
-
-                person.illness_degree = 1.0
-                if person.time_infected_minutes is None:
-                    person.time_infected_minutes = 0.0
