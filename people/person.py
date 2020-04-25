@@ -17,7 +17,7 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
             occupation: Occupation,
             susceptibility_degree: float,
             obedient_degree: float,
-            infected: bool,
+            is_infected: bool,
             symptoms_degree: float,
             immunity_degree: float,
             timestamp_arrived: datetime,
@@ -30,16 +30,17 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
         self.uuid = world.next_entity_id()
 
-        self.check_input_validity(infected, symptoms_degree, timestamp_infected, timestamp_symptomatic)
+        self.check_input_validity(is_infected, symptoms_degree, timestamp_infected, timestamp_symptomatic)
 
         self.age = age # age, in years
         self.sex = sex
         self.occupation = occupation
-        self.infected = infected
 
-        # magnitudes of various variables that characterize aspects of the illness.
         self.susceptibility_degree = susceptibility_degree
         self.obedient_degree = obedient_degree
+
+        self.is_infected = is_infected
+        self.alive = True
         self.symptoms_degree = symptoms_degree
         self.immunity_degree = immunity_degree
 

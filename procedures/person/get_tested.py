@@ -8,4 +8,4 @@ class GetTestedProcedure(PersonProcedure):
         return False
 
     def apply(self, person: Person):
-        person.infected = True
+        person.is_infected = True

@@ -13,14 +13,14 @@ class Meeting:
         self._location = site
 
     def __repr__(self):
-        string = "Meeting(Location: {0} \n \t person1: {1} \n \t person2: {2} \n \t meeting time: {3} \n \t is meeting infected: {4}".format(
+        string = "Meeting(Location: {0} \n \t person1: {1} \n \t person2: {2} \n \t meeting time: {3} \n \t is meeting is_infected: {4}".format(
             self._location, str(self._people_involved[0].uuid), str(self._people_involved[1].uuid),
             self._time, self.is_meeting_infected()
         )
         return string
 
     def __str__(self):
-        string = "Meeting(Location: {0} \n person1: {1} \n person2: {2} \n meeting time: {3} \n is meeting infected: {4}".format(
+        string = "Meeting(Location: {0} \n person1: {1} \n person2: {2} \n meeting time: {3} \n is meeting is_infected: {4}".format(
             self._location, str(self._people_involved[0].uuid), str(self._people_involved[1].uuid), self._time,
             self.is_meeting_infected()
         )
@@ -35,11 +35,11 @@ class Meeting:
 
     def is_meeting_infected(self):
         """
-        checks if one of the people in the meeting is infected.
+        checks if one of the people in the meeting is is_infected.
         :return boolean
         """
-        return self._people_involved[1].infected or\
-               self._people_involved[0].infected
+        return self._people_involved[1].is_infected or\
+               self._people_involved[0].is_infected
 
 
 class MeetingProcedureSite(SiteProcedure):
