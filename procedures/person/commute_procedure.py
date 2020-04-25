@@ -33,7 +33,7 @@ class CommuteProcedure(PersonProcedure):
         # check condition for initial location
         if self.initial_sites is not None:
             if isinstance(self.initial_sites, Site):
-                if person is not self.initial_sites:
+                if person not in self.initial_sites:
                     return False
             else:
                 if all(person not in init_site for init_site in self.initial_sites):
