@@ -5,7 +5,6 @@ from datetime import datetime
 from core.base_objects import ObjectWithAcquiredTraits, ObjectWithProcedures
 from core.world import world
 from people.traits import Sex, Occupation
-from sites import household
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
@@ -20,10 +19,9 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
             is_infected: bool,
             symptoms_degree: float,
             immunity_degree: float,
-            timestamp_arrived: datetime,
             timestamp_infected: Optional[datetime],
             timestamp_symptomatic: Optional[datetime],
-            household: household
+            household
     ):
         ObjectWithAcquiredTraits.__init__(self)
         ObjectWithProcedures.__init__(self)
@@ -44,9 +42,6 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
         self.symptoms_degree = symptoms_degree
         self.immunity_degree = immunity_degree
 
-        # time arrived at current site
-        self.timestamp_arrived = timestamp_arrived
-
         # time since infection started and symptoms started
         self.timestamp_infected = timestamp_infected
         self.timestamp_symptomatic = timestamp_symptomatic
@@ -56,7 +51,10 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
         self._commute_history = []
         self._current_site = None
+        self.timestamp_arrived = None
+
         self.site = household
+
 
     @staticmethod
     def check_input_validity(infected, symptoms_degree, timestamp_infected, timestamp_symptomatic):
@@ -77,7 +75,8 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
     def site(self, new_site):
         if new_site is not self._current_site:
             self._commute_history.append(SiteLog(self._current_site, world.current))
-            self._current_site.leave(self)
+            if self._current_site is not None:
+                self._current_site.leave(self)
 
         self._current_site = new_site
         new_site.enter(self)
