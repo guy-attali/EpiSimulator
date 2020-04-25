@@ -20,10 +20,10 @@ from utils.time_utils import SECONDS_IN_WEEK
 
 def setup_world():
 
-    number_of_family_households = 500
-    number_of_elder_households = 50
+    number_of_family_households = 200
+    number_of_elder_households = 20
     number_of_schools = 1
-    number_of_workplaces = 50
+    number_of_workplaces = 20
     percentage_of_sick = 1
 
     policy = StayHomeIfHasSymptoms()
