@@ -10,19 +10,19 @@ class _DecoratedProcedure:
     def is_type(self, instance_type):
         return self.decorated_procedure.is_type(instance_type)
 
-    def __getattr__(self, attr):
-        if attr in self.__dir__():
-            return attr
-        else:
-            return getattr(self.decorated_procedure, attr)
-
 
 class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
-    pass
+    def should_apply(self, person) -> bool:
+        return self.decorated_procedure.should_apply(person)
+    def apply(self, person):
+        return self.decorated_procedure.apply(person)
 
 
 class DecoratedSiteProcedure(SiteProcedure, _DecoratedProcedure, abc.ABC):
-    pass
+    def should_apply(self, site) -> bool:
+        return self.decorated_procedure.should_apply(site)
+    def apply(self, site):
+        return self.decorated_procedure.apply(site)
 
 
 class Policy:
