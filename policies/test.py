@@ -16,8 +16,8 @@ class TestPolicy(Policy):
             return DecoratedProcedureGoHome(procedure)
         return procedure
 
-    def world_pretick(self, timeframe):
+    def world_pretick(self):
         pass
 
-    def world_posttick(self, timeframe):
+    def world_posttick(self):
         pass

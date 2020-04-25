@@ -35,7 +35,7 @@ class ObjectWithProcedures:
 
         self.procedures.insert(index, procedure)
 
-    def tick(self, timestamp):
+    def tick(self):
         for procedure in self.procedures:
             if procedure.should_apply(self):
                 procedure.apply(self)

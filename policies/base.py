@@ -30,10 +30,10 @@ class Policy:
     def decorate_procedure(self, procedure):
         return procedure
 
-    def world_pretick(self, timeframe):
+    def world_pretick(self):
         pass
 
-    def world_posttick(self, timeframe):
+    def world_posttick(self):
         pass
 
 
