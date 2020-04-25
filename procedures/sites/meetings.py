@@ -66,7 +66,7 @@ class MeetingProcedureSite(SiteProcedure):
 
       return meetings
 
-    def calculate_meeting_probability(self, site, time_step):
+    def calculate_meeting_probability(self, site, time_step:timedelta):
         """
         calculates the meeting probabilty in a 'Site' in a certain moment.
         multiplying the number of people in square meters with the dispersion factor.
@@ -74,10 +74,10 @@ class MeetingProcedureSite(SiteProcedure):
         :param time_step - the time intervals
         """
         if len(site.people) < 2:
-            return 0
+            return 0.0
         else:
-            m_p = (len(site.people)*time_step/site.area)*site.dispersion_factor
-            return m_p if m_p < 1 else 1
+            m_p = (len(site.people)*(time_step.total_seconds()/60)/site.area)*site.dispersion_factor
+            return m_p if m_p < 1.0 else 1.0
 
     def should_apply(self, site: Site) -> bool:
         return True
