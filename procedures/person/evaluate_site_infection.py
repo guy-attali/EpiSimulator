@@ -6,6 +6,6 @@ class EvaluateSiteInfectionProcedure(PersonProcedure):
         return person.site is not None and person.is_infected
 
     def apply(self, person: Person):
-        for person in person.site.get_peoples():
+        for person in person.site.people:
             if person.is_infected:
                 continue

@@ -53,9 +53,9 @@ class MeetingProcedureSite(SiteProcedure):
       meetings = []
       meeting_probability = self.calculate_meeting_probability(site, time_step=world.time_step)
       if meeting_probability > 0:
-          for id, person1 in site.people:
+          for person1 in site.people:
               if random.random() <= meeting_probability:
-                  person2 = random.choice([person for person in site.get_peoples() if person != person1])
+                  person2 = random.choice(list(site.people.difference({person1})))
                   meeting = Meeting(
                       person1=person1,
                       person2=person2,

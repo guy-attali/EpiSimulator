@@ -1,7 +1,7 @@
 # use an actual spatial map?
 import math
 from collections import namedtuple
-from typing import Dict, List
+from typing import Dict, List, Set
 from datetime import timedelta
 
 from people.person import Person
@@ -37,7 +37,7 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
         # TODO: Is this necessary?
         self.uuid = id(self)
         self.geolocation: GeoLocation = location
-        self.people: Dict[Person, int] = {}
+        self.people: Set[Person] = set()
         self.log = []  # has a point?
 
 
@@ -52,15 +52,12 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
         self.dispersion_factor = dispersion_factor
 
     def enter(self, person: Person):
-        self.people[person] = world.current_time
+        self.people.add(person)
 
     def leave(self, person):
         if person not in self.people:
             raise Exception("This person {uuid} never entered the site".format(uuid=person.uuid))
-        self.people.pop(person)
-
-    def get_peoples(self) -> List[Person]:
-        return list(self.people.keys())
+        self.people.remove(person)
 
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
