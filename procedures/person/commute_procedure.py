@@ -16,7 +16,7 @@ class CommuteProcedure(PersonProcedure):
             self,
             destination_sites: Union[Site, Iterable[Site]],
             initial_sites: Optional[Union[Site, Iterable[Site]]] = None,
-            days: Optional[int,Iterable[int]] = None,
+            days: Optional[Union[int,Iterable[int]]] = None,
             time_in_day_interval: Optional[Tuple[timedelta, timedelta]] = None,
             time_in_site: Optional[timedelta] = None,
             probability_per_minute = 1.0
