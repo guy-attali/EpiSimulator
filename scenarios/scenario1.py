@@ -29,11 +29,6 @@ def setup_world():
     policy = StayHomeIfHasSymptoms()
     world.policies.append(policy)
 
-    # TODO: is it ok to use the same procedure instance for all sites, or should
-    #  we create separate instances for each site?
-    infect = InfectProcedure()
-    illness = IllnessProcedure()
-
     hub = HubSite(
         location=GeoLocation(-300.0, -300.0),
         area=500.0,
@@ -41,7 +36,7 @@ def setup_world():
         nominal_capacity=100
     )
     world.sites.append(hub)
-    hub.add_procedure(infect)
+    hub.add_procedure(InfectProcedure())
 
 
     def get_hub_procedures(house):
@@ -86,7 +81,7 @@ def setup_world():
         )
         world.sites.append(house)
 
-        house.add_procedure(infect)
+        house.add_procedure(InfectProcedure())
 
         to_hub, from_hub = get_hub_procedures(house)
         age = 60 + np.random.exponential(7)
@@ -108,7 +103,7 @@ def setup_world():
             if to_hub is not None:
                 person.add_procedure(to_hub)
                 person.add_procedure(from_hub)
-            person.add_procedure(illness)
+            person.add_procedure(IllnessProcedure)
 
             world.people.append(person)
 
@@ -123,7 +118,7 @@ def setup_world():
         )
         world.sites.append(house)
 
-        house.add_procedure(infect)
+        house.add_procedure(InfectProcedure())
 
         to_hub, from_hub = get_hub_procedures(house)
         parents_age = random.uniform(25, 60)
@@ -154,7 +149,7 @@ def setup_world():
             if to_hub is not None:
                 person.add_procedure(to_hub)
                 person.add_procedure(from_hub)
-            person.add_procedure(illness)
+            person.add_procedure(IllnessProcedure())
 
         if (parents_age > 30) and (parents_age < 50):
 
@@ -185,7 +180,7 @@ def setup_world():
                 if to_hub is not None:
                     person.add_procedure(to_hub)
                     person.add_procedure(from_hub)
-                person.add_procedure(illness)
+                person.add_procedure(IllnessProcedure())
 
 
     def create_workplaces():
@@ -197,7 +192,7 @@ def setup_world():
                 dispersion_factor=1.0,
                 nominal_capacity=random.randint(15, 25))
             world.sites.append(workplace)
-            workplace.add_procedure(infect)
+            workplace.add_procedure(InfectProcedure())
             workplaces.append(workplace)
 
         return workplaces
@@ -213,7 +208,7 @@ def setup_world():
                 dispersion_factor=1.0,
                 nominal_capacity=random.randint(100, 500))
             world.sites.append(school)
-            school.add_procedure(infect)
+            school.add_procedure(InfectProcedure())
             schools.append(school)
 
         return schools
