@@ -59,6 +59,9 @@ class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
             raise Exception("This person {uuid} never entered the site".format(uuid=person.uuid))
         self.people.remove(person)
 
+    def __contains__(self, person):
+        return person in self.people
+
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
 
