@@ -55,7 +55,8 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
         self.household = household
 
         self._commute_history = []
-        self.current_site = household
+        self._current_site = None
+        self.site = household
 
     @staticmethod
     def check_input_validity(infected, symptoms_degree, timestamp_infected, timestamp_symptomatic):
@@ -70,15 +71,15 @@ class Person(ObjectWithAcquiredTraits, ObjectWithProcedures):
 
     @property
     def site(self):
-        return self.current_site
+        return self._current_site
 
     @site.setter
     def site(self, new_site):
-        if new_site is not self.current_site:
-            self._commute_history.append(SiteLog(self.current_site, world.current))
-            self.current_site.leave(self)
+        if new_site is not self._current_site:
+            self._commute_history.append(SiteLog(self._current_site, world.current))
+            self._current_site.leave(self)
 
-        self.current_site = new_site
+        self._current_site = new_site
         new_site.enter(self)
         self.timestamp_arrived = world.current_time
 
