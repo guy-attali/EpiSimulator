@@ -22,6 +22,9 @@ class GeoLocation:
         y_distance = other.y - self.y
         return math.sqrt(x_distance ** 2 + y_distance ** 2)
 
+    def __iter__(self):
+        yield self.x
+        yield self.y
 
 class Site(ObjectWithAcquiredTraits, ObjectWithProcedures):
     def __init__(
