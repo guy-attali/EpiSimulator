@@ -1,8 +1,8 @@
 from enum import Enum
 
 from procedures.person.commute_procedure import CommuteProcedure
-from people.person import Person
-from sites.base import Site
+from core.person import Person
+from core.site import Site
 from sites.transport import TransportSite
 from core.world import world
 

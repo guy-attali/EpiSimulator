@@ -1,7 +1,7 @@
 import abc
 
-from people.person import Person
-from sites.base import Site
+from core.person import Person
+from core.site import Site
 
 
 class _Procedure(abc.ABC):

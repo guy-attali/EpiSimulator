@@ -1,8 +1,12 @@
 import random
 from procedures.base import SiteProcedure
 from core.world import world
-from sites.base import Site
+from core.site import Site
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 class Meeting:
     """
     Represents a single Meeting between two or more people
@@ -38,9 +42,14 @@ class Meeting:
         checks if one of the people in the meeting is is_infected.
         :return boolean
         """
+<<<<<<< HEAD
         return self._people_involved[1].is_infected or\
                self._people_involved[0].is_infected
 
+=======
+        return self._people_involved[1].traits.infected or\
+               self._people_involved[0].traits.infected
+>>>>>>> master
 
 class MeetingProcedureSite(SiteProcedure):
     def apply(self, site: Site):
@@ -76,8 +85,13 @@ class MeetingProcedureSite(SiteProcedure):
         if len(site.people) < 2:
             return 0.0
         else:
+<<<<<<< HEAD
             m_p = (len(site.people)*(time_step.total_seconds()/60)/site.area)*site.dispersion_factor
             return m_p if m_p < 1.0 else 1.0
+=======
+            m_p = (len(site.people)*time_step/site.traits.area)*site.traits.dispersion_factor
+            return m_p if m_p < 1 else 1
+>>>>>>> master
 
     def should_apply(self, site: Site) -> bool:
         return True

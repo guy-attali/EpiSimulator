@@ -1,4 +1,4 @@
-from people.person import Person
+from core.person import Person
 from procedures.base import PersonProcedure
 
 
@@ -8,4 +8,8 @@ class GetTestedProcedure(PersonProcedure):
         return False
 
     def apply(self, person: Person):
+<<<<<<< HEAD
         person.is_infected = True
+=======
+        person.traits.infected = True
+>>>>>>> master

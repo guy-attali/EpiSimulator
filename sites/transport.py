@@ -1,4 +1,4 @@
-from sites.base import Site
+from core.site import Site
 
 
 class TransportSite(Site):

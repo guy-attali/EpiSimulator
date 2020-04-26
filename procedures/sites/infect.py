@@ -1,7 +1,7 @@
 import random
 
 from procedures.base import SiteProcedure
-from sites.base import Site
+from core.site import Site
 from core.world import world
 
 class InfectProcedure(SiteProcedure):

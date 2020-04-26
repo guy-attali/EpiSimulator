@@ -4,55 +4,76 @@ from datetime import timedelta
 import numpy as np
 
 from core.world import world
-from people.person import Person
-from people.traits import Occupation, Sex
+from core.person import Person
+from core.site import GeoLocation
+from core.scenario import Scenario
+
 from policies.stay_home_if_has_symptoms import StayHomeIfHasSymptoms
 from procedures.person.commute_procedure import CommuteProcedure
 from procedures.person.illness import IllnessProcedure
 from procedures.sites.infect import InfectProcedure
-from sites.base import GeoLocation
-from sites.base import Site
 from sites.household import HouseholdSite
 from sites.workplace import WorkplaceSite
 from sites.school import SchoolSite
 from sites.hub import HubSite
 from utils.time_utils import SECONDS_IN_WEEK
-
-def setup_world():
-
-    number_of_family_households = 200
-    number_of_elder_households = 20
-    number_of_schools = 1
-    number_of_workplaces = 20
-    percentage_of_sick = 1
-
-    policy = StayHomeIfHasSymptoms()
-    world.policies.append(policy)
-
-    hub = HubSite(
-        location=GeoLocation(-300.0, -300.0),
-        area=500.0,
-        dispersion_factor=1.0,
-        nominal_capacity=100
-    )
-    world.sites.append(hub)
-    hub.add_procedure(InfectProcedure())
+from constants import OCCUPATION, SEX
 
 
-    def get_hub_procedures(house):
+class Scenario1(Scenario):
+    def build(self):
+        number_of_family_households = 200
+        number_of_elder_households = 20
+        number_of_schools = 1
+        number_of_workplaces = 20
+        percentage_of_sick = 1
+        workplaces = []
+        schools = []
+
+        world.append_policy(StayHomeIfHasSymptoms())
+
+        self.hub = HubSite(
+            location=GeoLocation(-300.0, -300.0),
+            area=500.0,
+            dispersion_factor=1.0,
+            nominal_capacity=100
+        )
+
+        world.append_site(self.hub)
+        self.hub.add_procedure(InfectProcedure())
+
+        for _ in range(number_of_workplaces):
+            workplaces.append(self.create_workplace())
+
+        for _ in range(number_of_schools):
+            schools.append(self.create_school())
+             
+        for _ in range(number_of_elder_households):
+            self.create_elder_household()
+
+        for _ in range(number_of_family_households):
+            workplace1 = random.choice(workplaces)
+            workplace2 = random.choice(workplaces)
+            school = random.choice(schools)
+            self.create_family_household(workplace1,workplace2,school)
+
+        self.initial_infected(percentage_of_sick)
+
+
+    def get_hub_procedures(self, house):
         to_hub = CommuteProcedure(
-            destination_sites=hub,
+            destination_sites=self.hub,
             probability_per_minute=60 / SECONDS_IN_WEEK
         )
 
         from_hub = CommuteProcedure(
             destination_sites=house,
-            initial_sites=hub,
+            initial_sites=self.hub,
             time_in_site=timedelta(hours=1))
 
         return to_hub, from_hub
 
-    def get_workplace_procedures(workplace, house):
+    def get_workplace_procedures(self, workplace, house):
         to_workplace = CommuteProcedure(
             destination_sites=workplace,
             initial_sites=house,
@@ -71,7 +92,7 @@ def setup_world():
         return to_workplace, from_workplace
 
 
-    def create_elder_household():
+    def create_elder_household(self):
         house = HouseholdSite(
             location=GeoLocation(random.uniform(-300, 300),
                                  random.uniform(-300, 300)),
@@ -79,18 +100,18 @@ def setup_world():
             dispersion_factor=1.0,
             nominal_capacity=random.randint(3, 6)
         )
-        world.sites.append(house)
+        world.append_site(house)
 
         house.add_procedure(InfectProcedure())
 
-        to_hub, from_hub = get_hub_procedures(house)
+        to_hub, from_hub = self.get_hub_procedures(house)
         age = 60 + np.random.exponential(7)
 
         for _ in range(2):
             person = Person(
                 age=age + random.uniform(-5, 5),
-                sex=Sex.MALE,
-                occupation=Occupation.UNEMPLOYED,
+                sex=SEX.MALE,
+                occupation=OCCUPATION.UNEMPLOYED,
                 susceptibility_degree=1.0,
                 obedient_degree=1.0,
                 is_infected=False,
@@ -105,10 +126,10 @@ def setup_world():
                 person.add_procedure(from_hub)
             person.add_procedure(IllnessProcedure())
 
-            world.people.append(person)
+            world.append_person(person)
 
 
-    def create_family_household(workplace1, workplace2, school):
+    def create_family_household(self, workplace1, workplace2, school):
         house = HouseholdSite(
             location=GeoLocation(random.uniform(-300, 300),
                                  random.uniform(-300, 300)),
@@ -116,11 +137,11 @@ def setup_world():
             dispersion_factor=1.0,
             nominal_capacity=random.randint(3, 6)
         )
-        world.sites.append(house)
+        world.append_site(house)
 
         house.add_procedure(InfectProcedure())
 
-        to_hub, from_hub = get_hub_procedures(house)
+        to_hub, from_hub = self.get_hub_procedures(house)
         parents_age = random.uniform(25, 60)
         workplaces = [workplace1, workplace2]
 
@@ -128,8 +149,8 @@ def setup_world():
         for i in range(2):
             person = Person(
                 age=parents_age + random.uniform(-5, 5),
-                sex=Sex.MALE,
-                occupation=Occupation.WORKER,
+                sex=SEX.MALE,
+                occupation=OCCUPATION.WORKER,
                 susceptibility_degree=1.0,
                 obedient_degree=1.0,
                 is_infected=False,
@@ -139,9 +160,9 @@ def setup_world():
                 timestamp_symptomatic=None,
                 household=house
             )
-            world.people.append(person)
+            world.append_person(person)
 
-            to_workplace, from_workplace = get_workplace_procedures(workplaces[i],
+            to_workplace, from_workplace = self.get_workplace_procedures(workplaces[i],
                                                                     house)
 
             person.add_procedure(to_workplace)
@@ -153,7 +174,7 @@ def setup_world():
 
         if (parents_age > 30) and (parents_age < 50):
 
-            to_school, from_school = get_workplace_procedures(
+            to_school, from_school = self.get_workplace_procedures(
                 school, house)
 
             # children
@@ -162,8 +183,8 @@ def setup_world():
                                            0.087])[0]):
                 person = Person(
                     age=parents_age - 25 + random.uniform(-5, 5),
-                    sex=Sex.MALE,
-                    occupation=Occupation.STUDENT,
+                    sex=SEX.MALE,
+                    occupation=OCCUPATION.STUDENT,
                     susceptibility_degree=1.0,
                     obedient_degree=1.0,
                     is_infected=False,
@@ -173,7 +194,7 @@ def setup_world():
                     timestamp_symptomatic=None,
                     household=house
                 )
-                world.people.append(person)
+                world.append_person(person)
 
                 person.add_procedure(to_school)
                 person.add_procedure(from_school)
@@ -183,54 +204,33 @@ def setup_world():
                 person.add_procedure(IllnessProcedure())
 
 
-    def create_workplaces():
-        workplaces = []
-        for _ in range(number_of_workplaces):
-            workplace = WorkplaceSite(
-                location=GeoLocation(random.normalvariate(0, 100), random.normalvariate(0, 100)),
-                area=random.uniform(100, 300),
-                dispersion_factor=1.0,
-                nominal_capacity=random.randint(15, 25))
-            world.sites.append(workplace)
-            workplace.add_procedure(InfectProcedure())
-            workplaces.append(workplace)
-
-        return workplaces
+    def create_workplace(self):
+        workplace = WorkplaceSite(
+            location=GeoLocation(random.normalvariate(0, 100), random.normalvariate(0, 100)),
+            area=random.uniform(100, 300),
+            dispersion_factor=1.0,
+            nominal_capacity=random.randint(15, 25))
+        world.append_site(workplace)
+        workplace.add_procedure(InfectProcedure())
+        return workplace
 
 
-    def create_schools():
-        schools = []
-        for _ in range(number_of_schools):
-            school = SchoolSite(
-                location=GeoLocation(random.uniform(-300, 300),
-                                     random.uniform(-300, 300)),
-                area=random.uniform(300, 1000),
-                dispersion_factor=1.0,
-                nominal_capacity=random.randint(100, 500))
-            world.sites.append(school)
-            school.add_procedure(InfectProcedure())
-            schools.append(school)
+    def create_school(self):
+        school = SchoolSite(
+            location=GeoLocation(random.uniform(-300, 300),
+                                    random.uniform(-300, 300)),
+            area=random.uniform(300, 1000),
+            dispersion_factor=1.0,
+            nominal_capacity=random.randint(100, 500))
+        world.append_site(school)
+        school.add_procedure(InfectProcedure())
+        
+        return school
 
-        return schools
-
-    def initial_infected():
+    def initial_infected(self, percentage_of_sick):
         for person in world.people:
             if random.random() < percentage_of_sick/100:
                 person.is_infected = True
                 person.timestamp_infected = world.current_time - timedelta(days=1)*random.uniform(0,5)
 
-
-    workplaces = create_workplaces()
-    schools = create_schools()
-
-    for _ in range(number_of_elder_households):
-        create_elder_household()
-
-    for _ in range(number_of_family_households):
-        workplace1 = random.choice(workplaces)
-        workplace2 = random.choice(workplaces)
-        school = random.choice(schools)
-        create_family_household(workplace1,workplace2,school)
-
-    initial_infected()
 

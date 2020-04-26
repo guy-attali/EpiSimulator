@@ -2,7 +2,7 @@ import random
 from math import exp
 
 from procedures.base import PersonProcedure
-from people.person import Person
+from core.person import Person
 from core.world import world
 from utils.time_utils import time_since, SECONDS_IN_WEEK
 

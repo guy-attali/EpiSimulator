@@ -1,14 +1,14 @@
 from core.world import world
-from scenarios.scenario1 import setup_world
+from scenarios.scenario1 import Scenario1
 from metrics.metrics_manager import MetricManager
 from display.display_manager import DisplayManager
-
 
 metrics_interval = 12
 display_interval = 12
 
 def main():
-    setup_world()
+    scenario = Scenario1()
+    scenario.build()
 
     metrics = MetricManager()
     display = DisplayManager()

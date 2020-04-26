@@ -3,10 +3,10 @@ from enum import Enum
 from datetime import timedelta
 import random
 
-from people.person import Person
+from core.person import Person
 from core.world import world
 from procedures.base import PersonProcedure
-from sites.base import Site
+from core.site import Site
 from sites.transport import TransportSite
 from utils.timeframe import TimeFrame
 from utils.time_utils import get_start_of_day, time_since
