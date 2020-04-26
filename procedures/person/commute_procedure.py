@@ -1,25 +1,24 @@
-from typing import Optional, Union, Iterable, Tuple
-from enum import Enum
-from datetime import timedelta
 import random
+from datetime import timedelta
+from typing import Optional, Union, Iterable, Tuple
 
 from core.person import Person
+from core.site import Site
 from core.world import world
 from procedures.base import PersonProcedure
-from core.site import Site
-from sites.transport import TransportSite
-from utils.timeframe import TimeFrame
 from utils.time_utils import get_start_of_day, time_since
+from utils.timeframe import TimeFrame
+
 
 class CommuteProcedure(PersonProcedure):
     def __init__(
             self,
             destination_sites: Union[Site, Iterable[Site]],
             initial_sites: Optional[Union[Site, Iterable[Site]]] = None,
-            days: Optional[Union[int,Iterable[int]]] = None,
+            days: Optional[Union[int, Iterable[int]]] = None,
             time_in_day_interval: Optional[Tuple[timedelta, timedelta]] = None,
             time_in_site: Optional[timedelta] = None,
-            probability_per_minute = 1.0
+            probability_per_minute=1.0
     ):
         self.dest_sites = destination_sites
         self.initial_sites = initial_sites
@@ -54,7 +53,7 @@ class CommuteProcedure(PersonProcedure):
             start_of_today = get_start_of_day()
             dt1 = self.time_in_day_interval[0]
             dt2 = self.time_in_day_interval[1]
-            timeframe = TimeFrame(start_of_today+dt1, start_of_today+dt2)
+            timeframe = TimeFrame(start_of_today + dt1, start_of_today + dt2)
             if world.current_tf.overlap(timeframe) == 0.0:
                 return False
 
@@ -65,7 +64,7 @@ class CommuteProcedure(PersonProcedure):
                 return False
 
         # randomly decide whether the pattern will be executed
-        if random.random() > ((world.current_tf.duration.total_seconds()/60) * self.probability_per_minute):
+        if random.random() > ((world.current_tf.duration.total_seconds() / 60) * self.probability_per_minute):
             return False
 
         return True

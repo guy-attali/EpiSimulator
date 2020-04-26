@@ -1,10 +1,11 @@
 from enum import Enum
 
-from procedures.person.commute_procedure import CommuteProcedure
 from core.person import Person
 from core.site import Site
-from sites.transport import TransportSite
 from core.world import world
+from procedures.person.commute_procedure import CommuteProcedure
+from sites.transport import TransportSite
+
 
 class COMMUTE_STATE(Enum):
     PREVIOUS_DEST = 1
@@ -16,13 +17,14 @@ class CommuteWithTransportProcedure(CommuteProcedure):
     def __init__(
             self,
             destination_sites,
-            initial_sites = None,
-            days = None,
-            time_in_day_interval = None,
-            time_in_site = None,
-            probability_per_minute = 1.0
+            initial_sites=None,
+            days=None,
+            time_in_day_interval=None,
+            time_in_site=None,
+            probability_per_minute=1.0
     ):
-        CommuteProcedure.__init__(self,destination_sites,initial_sites,days,time_in_day_interval,time_in_site,probability_per_minute)
+        CommuteProcedure.__init__(self, destination_sites, initial_sites, days, time_in_day_interval, time_in_site,
+                                  probability_per_minute)
 
         self.commute_state = COMMUTE_STATE.PREVIOUS_DEST
         self.current_dest = None
@@ -48,6 +50,3 @@ class CommuteWithTransportProcedure(CommuteProcedure):
 
     def find_transport(self, person: Person, from_site: Site, to_site: Site) -> TransportSite:
         return TransportSite()
-
-
-

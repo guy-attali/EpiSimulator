@@ -1,48 +1,24 @@
 from collections import namedtuple
-from typing import List, Optional
-from datetime import datetime
 
+from core.base_objects import ProceduresHolder
+from core.traits import PersonTraits
 from core.world import world
-from core.base_objects import ObjectWithProcedures
-from constants import SEX, OCCUPATION
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])
 
 
-class Person(ObjectWithProcedures):
+class Person(ProceduresHolder):
     def __init__(
             self,
-            age: float,
-            sex: SEX,
-            occupation: OCCUPATION,
-            susceptibility_degree: float,
-            obedient_degree: float,
-            is_infected: bool,
-            symptoms_degree: float,
-            immunity_degree: float,
-            timestamp_infected: Optional[datetime],
-            timestamp_symptomatic: Optional[datetime],
-            household):
+            household,
+            person_traits: PersonTraits = None,
+            **kwargs):
 
-        ObjectWithProcedures.__init__(self)
+        ProceduresHolder.__init__(self)
         self.uuid = world.next_entity_id()
-        self.check_input_validity(is_infected, symptoms_degree, timestamp_infected, timestamp_symptomatic)
+        self.traits = person_traits or PersonTraits(**kwargs)
 
-        self.age = age # age, in years
-        self.sex = sex
-        self.occupation = occupation
-
-        self.susceptibility_degree = susceptibility_degree
-        self.obedient_degree = obedient_degree
-
-        self.is_infected = is_infected
         self.alive = True
-        self.symptoms_degree = symptoms_degree
-        self.immunity_degree = immunity_degree
-
-        # time since infection started and symptoms started
-        self.timestamp_infected = timestamp_infected
-        self.timestamp_symptomatic = timestamp_symptomatic
 
         # the houshold site where the person lives
         self.household = household
@@ -52,17 +28,6 @@ class Person(ObjectWithProcedures):
         self.timestamp_arrived = None
 
         self.site = household
-
-    @staticmethod
-    def check_input_validity(infected, symptoms_degree, timestamp_infected, timestamp_symptomatic):
-        assert  ((not infected) and
-                 (timestamp_infected is None) and
-                 (timestamp_symptomatic is None) and
-                 (symptoms_degree == 0)) \
-                or (infected and
-                    (timestamp_infected is not None) and
-                    (timestamp_symptomatic is not None) and
-                    (timestamp_symptomatic >= timestamp_infected ))
 
     @property
     def site(self):
@@ -81,4 +46,3 @@ class Person(ObjectWithProcedures):
 
     def __hash__(self) -> int:
         return self.uuid
-

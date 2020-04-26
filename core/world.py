@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
+
 from utils.timeframe import TimeFrame
+
 
 class World:
     def __init__(self):
@@ -9,9 +11,9 @@ class World:
         self.policies = []
         self.current = 0
         self.time_step = timedelta(minutes=5)
-        self.current_tf = TimeFrame(datetime(2020, 3, 1, 18, 0),self.time_step)
+        self.current_tf = TimeFrame(datetime(2020, 3, 1, 18, 0), self.time_step)
         self.autoinc_entity_id = 0
-   
+
     def append_site(self, site):
         self.sites.append(site)
 

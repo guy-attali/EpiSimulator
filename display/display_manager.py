@@ -1,11 +1,12 @@
-from math import sqrt
 from collections import namedtuple
+from math import sqrt
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Circle, Rectangle, RegularPolygon
 
 from core.world import world
+
 
 class DisplayManager:
     def __init__(self):
@@ -38,13 +39,12 @@ class DisplayManager:
         # TODO: this is temporary! it makes `all_site_types` be in a nicer order
         all_site_types = ['HouseholdSite', 'WorkplaceSite', 'SchoolSite', 'HubSite']
 
-
-        PatchProps = namedtuple('PatchProps',['patch_class','kwargs','size_kwargs'])
+        PatchProps = namedtuple('PatchProps', ['patch_class', 'kwargs', 'size_kwargs'])
         patch_props = [
             PatchProps(
                 patch_class=Circle,
                 kwargs={},
-                size_kwargs=lambda area: {'radius':sqrt(area / 3.14 )*3}
+                size_kwargs=lambda area: {'radius': sqrt(area / 3.14) * 3}
             ),
             PatchProps(
                 patch_class=Rectangle,
@@ -57,17 +57,17 @@ class DisplayManager:
             PatchProps(
                 patch_class=RegularPolygon,
                 kwargs={
-                    'numVertices':3,
+                    'numVertices': 3,
                     'orientation': 0
                 },
-                size_kwargs=lambda area: {'radius': sqrt(4*area/(3*sqrt(3)))*3}
+                size_kwargs=lambda area: {'radius': sqrt(4 * area / (3 * sqrt(3))) * 3}
             ),
             PatchProps(
                 patch_class=Rectangle,
                 kwargs={},
                 size_kwargs=lambda area: {
-                    'width': sqrt(area)*4 * 3,
-                    'height': sqrt(area)/4 * 3,
+                    'width': sqrt(area) * 4 * 3,
+                    'height': sqrt(area) / 4 * 3,
                 }
             ),
 
@@ -97,14 +97,14 @@ class DisplayManager:
             s='',
             fontdict={
                 'color': 'white',
-                'size' : 12
+                'size': 12
             }
         )
 
     def update(self):
         self.time_txt.set_text(str(world.current_time))
 
-        cmap = LinearSegmentedColormap.from_list('my_cmap',['blue','red'])
+        cmap = LinearSegmentedColormap.from_list('my_cmap', ['blue', 'red'])
 
         for site in world.sites:
             patch = self.sites_props[site]['patch']
@@ -113,7 +113,7 @@ class DisplayManager:
                 patch.set_fill(False)
             else:
                 infected = sum(
-                    person.is_infected for person in site.people)
+                    person.traits.is_infected for person in site.people)
                 infected = infected / len(site.people)
                 patch.set_fill(True)
                 patch.set_facecolor(cmap(infected))

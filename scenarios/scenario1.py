@@ -3,35 +3,27 @@ from datetime import timedelta
 
 import numpy as np
 
-from core.world import world
+from constants import OCCUPATION, SEX
 from core.person import Person
-from core.site import GeoLocation
 from core.scenario import Scenario
-
+from core.site import GeoLocation
+from core.world import world
 from policies.stay_home_if_has_symptoms import StayHomeIfHasSymptoms
 from procedures.person.commute_procedure import CommuteProcedure
 from procedures.person.illness import IllnessProcedure
 from procedures.sites.infect import InfectProcedure
 from sites.household import HouseholdSite
-from sites.workplace import WorkplaceSite
-from sites.school import SchoolSite
 from sites.hub import HubSite
+from sites.school import SchoolSite
+from sites.workplace import WorkplaceSite
 from utils.time_utils import SECONDS_IN_WEEK
-from constants import OCCUPATION, SEX
 
 
 class Scenario1(Scenario):
-    def build(self):
-        number_of_family_households = 200
-        number_of_elder_households = 20
-        number_of_schools = 1
-        number_of_workplaces = 20
-        percentage_of_sick = 1
-        workplaces = []
-        schools = []
+    def __init__(self):
+        self.hub: HubSite = None
 
-        world.append_policy(StayHomeIfHasSymptoms())
-
+    def create_hub(self):
         self.hub = HubSite(
             location=GeoLocation(-300.0, -300.0),
             area=500.0,
@@ -42,12 +34,25 @@ class Scenario1(Scenario):
         world.append_site(self.hub)
         self.hub.add_procedure(InfectProcedure())
 
+    def build(self):
+        number_of_family_households = 200
+        number_of_elder_households = 20
+        number_of_schools = 1
+        number_of_workplaces = 20
+        percentage_of_sick = 1
+        workplaces = []
+        schools = []
+
+        self.create_hub()
+
+        world.append_policy(StayHomeIfHasSymptoms())
+
         for _ in range(number_of_workplaces):
             workplaces.append(self.create_workplace())
 
         for _ in range(number_of_schools):
             schools.append(self.create_school())
-             
+
         for _ in range(number_of_elder_households):
             self.create_elder_household()
 
@@ -55,10 +60,9 @@ class Scenario1(Scenario):
             workplace1 = random.choice(workplaces)
             workplace2 = random.choice(workplaces)
             school = random.choice(schools)
-            self.create_family_household(workplace1,workplace2,school)
+            self.create_family_household(workplace1, workplace2, school)
 
         self.initial_infected(percentage_of_sick)
-
 
     def get_hub_procedures(self, house):
         to_hub = CommuteProcedure(
@@ -90,7 +94,6 @@ class Scenario1(Scenario):
         )
 
         return to_workplace, from_workplace
-
 
     def create_elder_household(self):
         house = HouseholdSite(
@@ -128,7 +131,6 @@ class Scenario1(Scenario):
 
             world.append_person(person)
 
-
     def create_family_household(self, workplace1, workplace2, school):
         house = HouseholdSite(
             location=GeoLocation(random.uniform(-300, 300),
@@ -163,7 +165,7 @@ class Scenario1(Scenario):
             world.append_person(person)
 
             to_workplace, from_workplace = self.get_workplace_procedures(workplaces[i],
-                                                                    house)
+                                                                         house)
 
             person.add_procedure(to_workplace)
             person.add_procedure(from_workplace)
@@ -203,7 +205,6 @@ class Scenario1(Scenario):
                     person.add_procedure(from_hub)
                 person.add_procedure(IllnessProcedure())
 
-
     def create_workplace(self):
         workplace = WorkplaceSite(
             location=GeoLocation(random.normalvariate(0, 100), random.normalvariate(0, 100)),
@@ -214,23 +215,20 @@ class Scenario1(Scenario):
         workplace.add_procedure(InfectProcedure())
         return workplace
 
-
     def create_school(self):
         school = SchoolSite(
             location=GeoLocation(random.uniform(-300, 300),
-                                    random.uniform(-300, 300)),
+                                 random.uniform(-300, 300)),
             area=random.uniform(300, 1000),
             dispersion_factor=1.0,
             nominal_capacity=random.randint(100, 500))
         world.append_site(school)
         school.add_procedure(InfectProcedure())
-        
+
         return school
 
     def initial_infected(self, percentage_of_sick):
         for person in world.people:
-            if random.random() < percentage_of_sick/100:
+            if random.random() < percentage_of_sick / 100:
                 person.is_infected = True
-                person.timestamp_infected = world.current_time - timedelta(days=1)*random.uniform(0,5)
-
-
+                person.timestamp_infected = world.current_time - timedelta(days=1) * random.uniform(0, 5)

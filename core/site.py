@@ -1,12 +1,11 @@
 # use an actual spatial map?
 import math
 from collections import namedtuple
-from typing import Dict, List, Set
-from datetime import timedelta
+from typing import Set
 
+from core.base_objects import ProceduresHolder
 from core.person import Person
-from core.world import world
-from core.base_objects import ObjectWithProcedures
+from core.traits import SiteTraits
 
 
 class GeoLocation:
@@ -27,26 +26,22 @@ class GeoLocation:
         yield self.y
 
 
-class Site(ObjectWithProcedures):
-    def __init__(self, location: GeoLocation, area: float, dispersion_factor: float, nominal_capacity:int ):
-        ObjectWithProcedures.__init__(self)
+class Site(ProceduresHolder):
+    def __init__(self,
+                 location: GeoLocation,
+                 area: float,
+                 site_traits: SiteTraits = None,
+                 **kwargs):
+        ProceduresHolder.__init__(self)
 
         # TODO: Is this necessary?
-        self.uuid = id(self)
+        self.uuid: int = id(self)
         self.geolocation: GeoLocation = location
         self.people: Set[Person] = set()
-        self.log = []  # has a point?
 
-
+        self.traits: SiteTraits = site_traits or SiteTraits(**kwargs)
         # the "effective" area, in meters squared, of the site.
         self.area = area
-
-        # the typical maximal number of people that the site can contain
-        self.nominal_capacity = nominal_capacity
-
-        # this value determines the tendency of people in the site to move around
-        # (lower values mean that people are relatively static)
-        self.dispersion_factor = dispersion_factor
 
     def enter(self, person: Person):
         self.people.add(person)
@@ -61,8 +56,6 @@ class Site(ObjectWithProcedures):
 
     def distance_from(self, dest_site) -> float:
         return self.geolocation - dest_site
-
-
 
 
 SiteLog = namedtuple('SiteLog', ['site', 'time'])

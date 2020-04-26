@@ -7,4 +7,3 @@ class HomeQuarantineProcedure(PersonProcedure):
 
 class HospitalQuarantineProcedure(PersonProcedure):
     pass
-

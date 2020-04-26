@@ -11,9 +11,9 @@ class MetricManager:
         i = 0
         r = 0
         for person in world.people:
-            if person.is_infected:
+            if person.traits.is_infected:
                 i += 1
-            elif person.immunity_degree > 0:
+            elif person.traits.immunity_degree > 0:
                 r += 1
             else:
                 s += 1

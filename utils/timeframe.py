@@ -1,6 +1,6 @@
+import random
 from datetime import datetime, timedelta
 from typing import Union
-import random
 
 
 class TimeFrame:
@@ -19,10 +19,10 @@ class TimeFrame:
         return self.start <= timestamp < self.end
 
     def __add__(self, delta: timedelta):
-        return TimeFrame(self.start+delta, self.end+delta)
+        return TimeFrame(self.start + delta, self.end + delta)
 
     def __sub__(self, delta: timedelta):
-        return TimeFrame(self.start-delta, self.end-delta)
+        return TimeFrame(self.start - delta, self.end - delta)
 
     def __iadd__(self, delta: timedelta):
         self.start += delta
@@ -37,7 +37,7 @@ class TimeFrame:
             return 0.0
         if other_timeframe.end <= self.start:
             return 0.0
-        return (min(self.end, other_timeframe.end) - max(self.start, other_timeframe.start))/self.duration
+        return (min(self.end, other_timeframe.end) - max(self.start, other_timeframe.start)) / self.duration
 
     def sample_random_timestamp(self):
-        return self.start + self.duration*random.random()
+        return self.start + self.duration * random.random()

@@ -1,7 +1,8 @@
+from core.world import world
 from policies.base import Policy, DecoratedPersonProcedure
 from procedures.person.commute_procedure import CommuteProcedure
-from core.world import world
 from utils.time_utils import time_since, SECONDS_IN_WEEK
+
 
 class DecoratedCommutingProcedure(DecoratedPersonProcedure):
     def __init__(self, procedure, policy: 'StayHomeIfHasSymptoms'):
@@ -10,7 +11,7 @@ class DecoratedCommutingProcedure(DecoratedPersonProcedure):
 
     def should_apply(self, person):
         if (not self.policy.in_effect) or (person.site is not person.household) or \
-            (person.symptoms_degree < 0.2):
+                (person.traits.symptoms_degree < 0.2):
             return self.decorated_procedure.should_apply(person)
         else:
             return False
@@ -30,6 +31,6 @@ class StayHomeIfHasSymptoms(Policy):
         if (self.last_time_evaluated is None) or time_since(self.last_time_evaluated).total_seconds() > SECONDS_IN_WEEK:
             self.last_time_evaluated = world.current_time
 
-            num_people_with_symptoms = sum(person.symptoms_degree>0.2 for person in world.people)
+            num_people_with_symptoms = sum(person.traits.symptoms_degree > 0.2 for person in world.people)
 
             self.in_effect = num_people_with_symptoms > 0.05 * len(world.people)

@@ -14,6 +14,7 @@ class _DecoratedProcedure:
 class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
     def should_apply(self, person) -> bool:
         return self.decorated_procedure.should_apply(person)
+
     def apply(self, person):
         return self.decorated_procedure.apply(person)
 
@@ -21,6 +22,7 @@ class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
 class DecoratedSiteProcedure(SiteProcedure, _DecoratedProcedure, abc.ABC):
     def should_apply(self, site) -> bool:
         return self.decorated_procedure.should_apply(site)
+
     def apply(self, site):
         return self.decorated_procedure.apply(site)
 

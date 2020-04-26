@@ -1,6 +1,7 @@
 from core.world import world
 
-class ObjectWithProcedures:
+
+class ProceduresHolder:
     def __init__(self):
         self.procedures = []
 
@@ -16,5 +17,3 @@ class ObjectWithProcedures:
         for procedure in self.procedures:
             if procedure.should_apply(self):
                 procedure.apply(self)
-
-
