@@ -16,11 +16,7 @@ class IllnessProcedure(PersonProcedure):
     def should_apply(self, person: Person) -> bool:
         if not person.traits.is_infected:
             return False
-        current_date = world.current_time.date()
-        if self.last_date_updated != current_date:
-            self.last_date_updated = current_date
-            return True
-        return False
+        return True
 
     def apply(self, person: Person):
         if person.traits.is_infected:
