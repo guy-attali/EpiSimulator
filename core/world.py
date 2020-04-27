@@ -37,7 +37,7 @@ class World:
             policy.world_posttick()
 
         self.current += 1
-        self.current_tf = self.current_tf + self.time_step
+        self.current_tf = self.current_tf.next_tf(self.time_step)
 
     def next_entity_id(self):
         self.UUID += 1

@@ -39,5 +39,8 @@ class TimeFrame:
             return 0.0
         return (min(self.end, other_timeframe.end) - max(self.start, other_timeframe.start)) / self.duration
 
+    def next_tf(self, delta: timedelta):
+        return TimeFrame(start=self.end, i=delta)
+
     def sample_random_timestamp(self):
         return self.start + self.duration * random.random()
