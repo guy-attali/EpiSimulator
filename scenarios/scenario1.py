@@ -230,5 +230,5 @@ class Scenario1(Scenario):
     def initial_infected(self, percentage_of_sick):
         for person in world.people:
             if random.random() < percentage_of_sick / 100:
-                person.is_infected = True
-                person.timestamp_infected = world.current_time - timedelta(days=1) * random.uniform(0, 5)
+                person.traits.is_infected = True
+                person.traits.timestamp_infected = world.current_time - timedelta(days=1) * random.uniform(0, 5)

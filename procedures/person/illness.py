@@ -21,17 +21,17 @@ class IllnessProcedure(PersonProcedure):
         return False
 
     def apply(self, person: Person):
-        if person.is_infected:
+        if person.traits.is_infected:
             time_infected = time_since(person.traits.timestamp_infected)
             if time_infected.total_seconds() > 2 * SECONDS_IN_WEEK:
                 heal_probability = exp(-0.03 * person.traits.age - 1.28)
                 if random.random() < heal_probability:
-                    person.is_infected = False
-                    person.symptoms_degree = 0.0
-                    person.immunity_degree = 1.0
+                    person.traits.is_infected = False
+                    person.traits.symptoms_degree = 0.0
+                    person.traits.immunity_degree = 1.0
                     return
-            if (person.symptoms_degree > 0) or time_infected.total_seconds() > 2 * SECONDS_IN_WEEK:
-                person.symptoms_degree += random.uniform(0, person.traits.age / 400)
-                person.symptoms_degree = min(person.symptoms_degree, 1.0)
-                if person.timestamp_symptomatic is None:
-                    person.timestamp_symptomatic = world.current_time
+            if (person.traits.symptoms_degree > 0) or time_infected.total_seconds() > 0 * SECONDS_IN_WEEK:
+                person.traits.symptoms_degree += random.uniform(0, person.traits.age / 400)
+                person.traits.symptoms_degree = min(person.traits.symptoms_degree, 1.0)
+                if person.traits.timestamp_symptomatic is None:
+                    person.traits.timestamp_symptomatic = world.current_time

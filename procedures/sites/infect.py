@@ -41,5 +41,5 @@ class InfectProcedure(SiteProcedure):
 
             # perform infection
             if random.random() < person_infecting_score:
-                person.is_infected = True
-                person.timestamp_infected = world.current_time
+                person.traits.is_infected = True
+                person.traits.timestamp_infected = world.current_time
