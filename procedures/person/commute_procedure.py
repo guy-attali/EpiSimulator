@@ -64,7 +64,7 @@ class CommuteProcedure(PersonProcedure):
                 return False
 
         # randomly decide whether the pattern will be executed
-        if random.random() > ((world.current_tf.duration.total_seconds() / 60) * self.probability_per_minute):
+        if random.random() > 1-((1-self.probability_per_minute)**(world.current_tf.duration.total_seconds() / 60)):
             return False
 
         return True

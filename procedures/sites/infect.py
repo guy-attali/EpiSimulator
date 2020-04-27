@@ -5,6 +5,10 @@ from core.world import world
 from procedures.base import SiteProcedure
 
 
+
+disease_spreading_factor = 1
+
+
 class InfectProcedure(SiteProcedure):
     def should_apply(self, site: Site) -> bool:
         return True
@@ -22,12 +26,11 @@ class InfectProcedure(SiteProcedure):
 
         # from these variables, get a "score" for the site, where a high score
         # means higher chance if infection
-        site_infecting_score = (world.current_tf.duration.total_seconds() / 60) * \
-                               ratio_of_ill_people * \
-                               density * \
-                               ratio_of_capacity \
+        site_infecting_score = (world.current_tf.duration.total_seconds()/60) \
+                               * ratio_of_ill_people \
+                               * density \
                                * site.traits.dispersion_factor \
-                               / 1000.0
+                               * disease_spreading_factor
         # for each person, calculate whether it got is_infected, or maybe even
         # healed
         for person in people:

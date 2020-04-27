@@ -1,10 +1,10 @@
 from core.world import world
 from sites.hub import HubSite
-
+import pandas as pd
 
 class MetricManager:
     def __init__(self):
-        pass
+        self.log = []
 
     def get_sir_distribution(self):
         s = 0
@@ -46,3 +46,32 @@ class MetricManager:
         print('home: {:6.2f}%   work/school: {:6.2f}%   hub: {:6.2f}%'.format(
             at_home * 100, at_work_or_school * 100, at_hub * 100))
         print('')
+
+    def connections_graph(self):
+        connections = set()
+        for site in world.sites:
+            people = list(site.people)
+            for i, person_1 in enumerate(people[:-1]):
+                for person_2 in people[i+1:]:
+                    if person_1 is not person_2:
+                        connections.add((person_1.uuid, person_2.uuid))
+        return connections
+
+    def add_to_log(self):
+        s, i, r = self.get_sir_distribution()
+        at_home, at_work_or_school, at_hub = self.get_site_distribution()
+        cur_metrics = {
+            'time': world.current_time,
+            's': s, 'i': i, 'r': r,
+            'at_home': at_home,
+            'at_work_or_school': at_work_or_school,
+            'at_hub': at_hub,
+            'connections': self.connections_graph()
+        }
+        self.log.append(cur_metrics)
+
+    def to_df(self):
+        metrics_df = pd.DataFrame(self.log)
+        metrics_df['time_days'] = metrics_df.time.apply(lambda x: x.timestamp()) / (24*60*60)
+        metrics_df['time_days'] = metrics_df['time_days'] - metrics_df.loc[0, 'time_days']
+        return metrics_df
