@@ -20,6 +20,16 @@ class World:
     def append_person(self, person):
         self.people.append(person)
 
+    @property
+    def time_step(self):
+        return self.__time_step
+
+    @time_step.setter
+    def time_step(self, time_step):
+        if hasattr(self, 'current_tf'):
+            self.current_tf = TimeFrame(self.current_tf.start, self.current_tf.start + time_step)
+        self.__time_step = time_step
+
     def append_policy(self, policy):
         self.policies.append(policy)
 

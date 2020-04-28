@@ -22,6 +22,8 @@ from utils.time_utils import SECONDS_IN_WEEK
 class Scenario1(Scenario):
     def __init__(self):
         self.hub: HubSite = None
+        self.config_file_path = 'config.yml'
+        self.time_step = timedelta(minutes=120)
 
     def create_hub(self):
         self.hub = HubSite(
