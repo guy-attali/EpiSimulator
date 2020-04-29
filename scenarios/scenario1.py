@@ -8,7 +8,7 @@ from core.person import Person
 from core.scenario import Scenario
 from core.site import GeoLocation
 from core.world import world
-from policies.stay_home_if_has_symptoms import StayHomeIfHasSymptoms
+from policies.lockdown import Lockdown
 from procedures.person.commute_procedure import CommuteProcedure
 from procedures.person.illness import IllnessProcedure
 from procedures.sites.infect import InfectProcedure
@@ -18,9 +18,9 @@ from sites.school import SchoolSite
 from sites.workplace import WorkplaceSite
 from utils.time_utils import SECONDS_IN_WEEK
 
-
 class Scenario1(Scenario):
     def __init__(self):
+        random.seed(23)
         self.hub: HubSite = None
         self.config_file_path = 'config.yml'
         self.time_step = timedelta(minutes=120)
@@ -38,16 +38,16 @@ class Scenario1(Scenario):
 
     def build(self):
         number_of_family_households = 200
-        number_of_elder_households = 20
-        number_of_schools = 1
-        number_of_workplaces = 20
-        percentage_of_sick = 1
+        number_of_elder_households = 50
+        number_of_schools = 3
+        number_of_workplaces = 50
+        percentage_of_sick = 5
         workplaces = []
         schools = []
 
         self.create_hub()
 
-        world.append_policy(StayHomeIfHasSymptoms())
+        world.append_policy(Lockdown())
 
         for _ in range(number_of_workplaces):
             workplaces.append(self.create_workplace())
