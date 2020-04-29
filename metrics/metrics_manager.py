@@ -57,17 +57,30 @@ class MetricManager:
                         connections.add((person_1.uuid, person_2.uuid))
         return connections
 
-    def add_to_log(self):
-        s, i, r = self.get_sir_distribution()
-        at_home, at_work_or_school, at_hub = self.get_site_distribution()
-        cur_metrics = {
-            'time': world.current_time,
-            's': s, 'i': i, 'r': r,
-            'at_home': at_home,
-            'at_work_or_school': at_work_or_school,
-            'at_hub': at_hub,
-            'connections': self.connections_graph()
-        }
+    def add_to_log(self, log_metrics=None):
+        cur_metrics = {'time': world.current_time}
+        if log_metrics is None or \
+                'site_distribution' in log_metrics:
+            s, i, r = self.get_sir_distribution()
+            cur_metrics.update({'s': s, 'i': i, 'r': r})
+        if log_metrics is None or \
+                'site_distribution' in log_metrics:
+            at_home, at_work_or_school, at_hub = self.get_site_distribution()
+            cur_metrics.update({'at_home': at_home,
+                                'at_work_or_school': at_work_or_school,
+                                'at_hub': at_hub
+                                })
+        if log_metrics is None or \
+                'connections' in log_metrics:
+            cur_metrics.update({'connections': self.connections_graph()})
+        # cur_metrics = {
+        #     'time': world.current_time,
+        #     's': s, 'i': i, 'r': r,
+            # 'at_home': at_home,
+            # 'at_work_or_school': at_work_or_school,
+            # 'at_hub': at_hub,
+            # 'connections': self.connections_graph()
+        # }
         self.log.append(cur_metrics)
 
     def to_df(self):
