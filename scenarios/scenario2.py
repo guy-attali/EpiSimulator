@@ -14,7 +14,7 @@ from sites.household import HouseholdSite
 from sites.hub import HubSite
 from sites.school import SchoolSite
 from sites.workplace import WorkplaceSite
-from utils.time_utils import SECONDS_IN_WEEK
+from utils.time_utils import SECONDS_IN_WEEK, WORK_DAYS
 from core.traits import SiteTraits
 
 def get_value(var):
@@ -66,27 +66,57 @@ class Scenario2(Scenario):
     def build(self):
         world.append_policy(Lockdown())
         self.gen_city(0)
+        self.initial_infected(5)  # add to params
 
     def gen_city(self, city_id):
         neighborhood_schools_dict = {}
         neighborhood_workplaces_dict = {}
-        for neighborhood_id in range(get_value(self.scenario_params['num_of_neighborhoods'])):
-            schools, workplaces = self.gen_neighborhood_public_sites(neighborhood_id, city_id)
+        neighborhood_hub_dict = {}
+        num_of_neighborhoods = get_value(self.scenario_params['num_of_neighborhoods'])
+        for neighborhood_id in range(num_of_neighborhoods):
+            neighborhood_params = {'location': GeoLocation(0, 0)}
+            schools, workplaces = self.gen_neighborhood_public_sites(neighborhood_id, city_id, neighborhood_params)
+            neighborhood_hub_dict[neighborhood_id] = self.gen_neighborhood_hub(neighborhood_id, city_id, neighborhood_params)
             neighborhood_schools_dict[neighborhood_id] = schools
             neighborhood_workplaces_dict[neighborhood_id] = workplaces
 
         # generate households
-        for neighborhood_id in range(get_value(self.scenario_params['num_of_neighborhoods'])):
+        for neighborhood_id in range(num_of_neighborhoods):
             for _ in range(get_value(self.scenario_params['num_households_per_neighborhood'])):
-                children, adults = self.gen_household()
+                children, adults = self.gen_household(neighborhood_id, city_id)
                 for child in children:
                     classroom = random.choice(neighborhood_schools_dict[neighborhood_id])
                     self.assign_person_to_work_or_school(child, classroom)
                 for adult in adults:
                     office = self.select_workplace(neighborhood_workplaces_dict, neighborhood_id)
                     self.assign_person_to_work_or_school(adult, office)
+        self.send_people_to_hubs(neighborhood_hub_dict)
         self.add_procedures_to_all_people([IllnessProcedure])
         self.add_procedures_to_all_sites([InfectProcedure])
+
+    def gen_neighborhood_hub(self, neighborhood_id, city_id, neighborhood_params):
+        return HubSite(neighborhood_params['location'], area=100,
+                    dispersion_factor=1,
+                    nominal_capacity=100,
+                    neighborhood_id=neighborhood_id, city_id=city_id,
+                    name=f'neighborhood_{neighborhood_id}_hub')
+
+    def send_people_to_hubs(self, neighborhood_hub_dict):
+        for person in world.people:
+            hub = neighborhood_hub_dict[person.household.traits.neighborhood_id]
+            to_hub = CommuteProcedure(
+                destination_sites=hub,
+                initial_sites=person.household,
+                probability_per_minute=0.001  # add to params
+            )
+            from_hub = CommuteProcedure(
+                destination_sites=person.household,
+                initial_sites=hub,
+                time_in_site=timedelta(hours=1)  # add to params
+            )
+            person.add_procedure(to_hub)
+            person.add_procedure(from_hub)
+
 
     def add_procedures_to_all_people(self, procedures):
         for person in world.people:
@@ -99,7 +129,30 @@ class Scenario2(Scenario):
                 site.add_procedure(procedure())
 
     def assign_person_to_work_or_school(self, person, work_or_school):
-        pass
+        start_time = timedelta(hours=8)  # add to params
+        end_time = timedelta(hours=14)  # add to params
+        to_work = CommuteProcedure(
+            destination_sites=work_or_school, days=WORK_DAYS,
+            time_in_day_interval=(start_time, end_time),
+            probability_per_minute=1)
+        from_work = CommuteProcedure(
+            destination_sites=person.household,
+            initial_sites=[work_or_school, work_or_school.traits.parent_site],
+            time_in_day_interval=(end_time, timedelta(hours=24)),
+            probability_per_minute=1) #  add to params
+        to_work_hub = CommuteProcedure(
+            destination_sites=work_or_school.traits.parent_site,
+            initial_sites=work_or_school,
+            probability_per_minute=0.001)  # add to params
+        from_work_hub = CommuteProcedure(
+            destination_sites=work_or_school,
+            initial_sites=work_or_school.traits.parent_site,
+            time_in_site=timedelta(hours=1),  # add to params
+            probability_per_minute=1)
+        person.add_procedure(to_work)
+        person.add_procedure(from_work)
+        person.add_procedure(to_work_hub)
+        person.add_procedure(from_work_hub)
 
     def select_workplace(self, neighborhood_workplaces_dict, neighborhood_id):
         if random.random() < self.scenario_params['work_in_neighborhood_prob']:
@@ -109,12 +162,13 @@ class Scenario2(Scenario):
             work_neighborhood_id = random.choice(
                 list(set(neighborhood_workplaces_dict.keys()) - {neighborhood_id})
             )
-        workplaces_group = random.choice(neighborhood_workplaces_dict[work_neighborhood_id])
-        return random.choice(workplaces_group)
+        return random.choice(neighborhood_workplaces_dict[work_neighborhood_id])
 
-    def gen_household(self):
+    def gen_household(self, neighborhood_id, city_id):
         home = HouseholdSite(location=GeoLocation(0, 0), area=10,
-                             dispersion_factor=10, nominal_capacity=10)
+                             dispersion_factor=10, nominal_capacity=10,
+                             neighborhood_id=neighborhood_id, city_id=city_id,
+                             name=f'house_in_neighborhood_{neighborhood_id}')
         world.append_site(home)
         num_adults_in_household = get_value(self.scenario_params['num_adults_in_household'])
         num_children_in_household = get_value(self.scenario_params['num_children_in_household'])
@@ -124,22 +178,22 @@ class Scenario2(Scenario):
             adults.append(self.gen_person(home))
         for _ in range(num_children_in_household):
             children.append(self.gen_person(home))
-            return children, adults
+        return children, adults
 
     def gen_person(self, home):
         p = Person(household=home, **self.scenario_params['person_default_params'])
         world.append_person(p)
         return p
 
-    def gen_neighborhood_public_sites(self, neighborhood_id, city_id):
+    def gen_neighborhood_public_sites(self, neighborhood_id, city_id, neighborhood_params):
         schools = []
         workplaces = []
         for _ in range(get_value(self.scenario_params['num_schools_per_neighborhood'])):
-            school_location = GeoLocation(0, 0)
-            schools.append(self.gen_public_site('school', school_location, neighborhood_id, city_id))
+            school_location = neighborhood_params['location']
+            schools.extend(self.gen_public_site('school', school_location, neighborhood_id, city_id))
         for _ in range(get_value(self.scenario_params['num_workplaces_per_neighborhood'])):
             work_location = GeoLocation(0, 0)
-            workplaces.append(self.gen_public_site('work', work_location, neighborhood_id, city_id))
+            workplaces.extend(self.gen_public_site('work', work_location, neighborhood_id, city_id))
         return schools, workplaces
 
     def gen_public_site(self, site_type, location, neighborhood_id, city_id):
@@ -150,13 +204,14 @@ class Scenario2(Scenario):
         hub_dispersion = get_value(self.scenario_params[site_type]['hub_dispersion'])
         hub_capacity = get_value(self.scenario_params[site_type]['hub_capacity'])
         if num_of_sub_sites > 1:  # this hub is only for container sites
-            hub = HubSite(
+            hub = Site(
                 location=location,
                 area=hub_area,
                 dispersion_factor=hub_dispersion,
                 nominal_capacity=hub_capacity,
                 neighborhood_id=neighborhood_id,
-                city_id=city_id
+                city_id=city_id,
+                name=f'{site_type}_hub_in_neighborhood_{neighborhood_id}'
             )
             world.append_site(hub)
         else:
@@ -173,12 +228,18 @@ class Scenario2(Scenario):
                 nominal_capacity=sub_capacity,
                 parent_site=hub,
                 neighborhood_id=neighborhood_id,
-                city_id=city_id
+                city_id=city_id,
+                name=f'{site_type}_in_neighborhood_{neighborhood_id}'
             )
             world.append_site(sub)
             sub_list.append(sub)
         return sub_list
 
+    def initial_infected(self, percentage_of_infected):
+        for person in world.people:
+            if random.random() < percentage_of_infected / 100:
+                person.traits.is_infected = True
+                person.traits.timestamp_infected = world.current_time - timedelta(days=1) * random.uniform(0, 5)
 
 def main():
     s = Scenario2()

@@ -22,6 +22,7 @@ def scenario_runner(Scenario, print_metrics_interval=None, display_interval=None
         display = DisplayManager()
     for _ in tqdm(range(iters)):
         metrics.add_to_log()
+        # print(world.current_time, world.people[0].site.name)
         if print_metrics_interval is not None and \
                 world.current % print_metrics_interval == 0:
             metrics.show()
