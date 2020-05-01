@@ -18,6 +18,7 @@ from sites.school import SchoolSite
 from sites.workplace import WorkplaceSite
 from utils.time_utils import SECONDS_IN_WEEK
 
+
 class Scenario(ScenarioBase):
     def __init__(self):
         random.seed(23)

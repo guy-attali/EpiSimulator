@@ -1,8 +1,9 @@
 import random
+
 import config
+from core.procedure import SiteProcedure
 from core.site import Site
 from core.world import world
-from core.procedure import SiteProcedure
 
 
 class InfectProcedure(SiteProcedure):
@@ -22,7 +23,7 @@ class InfectProcedure(SiteProcedure):
 
         # from these variables, get a "score" for the site, where a high score
         # means higher chance if infection
-        site_infecting_score = (world.current_tf.duration.total_seconds()/60) \
+        site_infecting_score = (world.current_tf.duration.total_seconds() / 60) \
                                * ratio_of_ill_people \
                                * density \
                                * site.traits.dispersion_factor \

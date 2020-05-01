@@ -1,8 +1,10 @@
-import sys, yaml
+import sys
+import yaml
 
 
 def extend_from_dict(options):
     sys.modules[__name__].__dict__.update(options)
+
 
 def extend_from_filename(filename):
     with open(filename) as f:

@@ -1,12 +1,13 @@
-import sys, types
 from datetime import datetime, timedelta
+
 from utils.timeframe import TimeFrame
+
 
 class World:
     def __init__(self):
         self.reset()
 
-    def reset (self):
+    def reset(self):
         self.UUID = 0
         self.people = []
         self.sites = []
@@ -22,7 +23,7 @@ class World:
         if (scenario.time_step):
             self.time_step = scenario.time_step
         scenario.build()
-        
+
         for policy in self.policies:
             policy.world_post_scenario_build()
 
@@ -73,7 +74,7 @@ class World:
         self.current += 1
         self.current_tf = self.current_tf.next_tf(self.time_step)
 
-    def finish (self):
+    def finish(self):
         for policy in self.policies:
             policy.finish()
 
@@ -100,7 +101,3 @@ class World:
 
 
 world = World()
-
-
-
-

@@ -1,9 +1,11 @@
-import os, config
+import config
+import os
+
 from tqdm import tqdm
+
+from core.world import world
 from plugins.matplot import PluginMatplot
 from plugins.pandas import PluginPandas
-from core.world import world
-
 
 SECONDS_IN_DAY = 60 * 60 * 24
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -11,8 +13,7 @@ config.extend_from_filename(os.path.join(ROOT_PATH, 'config.yml'))
 
 
 def run_scenario(Scenario, print_metrics_interval=None, display_interval=None,
-                    iters=10, sim_days=None, config_ext={}):
-
+                 iters=10, sim_days=None, config_ext={}):
     config.extend_from_dict(config_ext)
     world.reset()
 
@@ -28,11 +29,10 @@ def run_scenario(Scenario, print_metrics_interval=None, display_interval=None,
 
     if sim_days is not None:
         iters = int(sim_days * SECONDS_IN_DAY / scenario.time_step.total_seconds())
-    
 
     for _ in tqdm(range(iters)):
         world.tick()
-    
+
     world.finish()
 
     return {

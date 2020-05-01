@@ -3,9 +3,9 @@ from datetime import timedelta
 from typing import Optional, Union, Iterable, Tuple
 
 from core.person import Person
+from core.procedure import PersonProcedure
 from core.site import Site
 from core.world import world
-from core.procedure import PersonProcedure
 from utils.time_utils import get_start_of_day, time_since
 from utils.timeframe import TimeFrame
 
@@ -64,7 +64,8 @@ class CommuteProcedure(PersonProcedure):
                 return False
 
         # randomly decide whether the pattern will be executed
-        if random.random() > 1-((1-self.probability_per_minute)**(world.current_tf.duration.total_seconds() / 60)):
+        if random.random() > 1 - (
+                (1 - self.probability_per_minute) ** (world.current_tf.duration.total_seconds() / 60)):
             return False
 
         return True

@@ -1,17 +1,20 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import networkx as nx
 from collections import namedtuple
 from math import sqrt
+
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Circle, Rectangle, RegularPolygon
+
 from core.plugin import Plugin
 from core.world import world
+
 
 class PluginMatplot(Plugin):
     def __init__(self, display_interval):
         self._display_interval = display_interval
-    
+
     def world_post_scenario_build(self):
         self.fig = plt.figure(figsize=(6, 6), facecolor='black',
                               edgecolor='black', frameon=True)
@@ -127,11 +130,11 @@ class PluginMatplot(Plugin):
         i_nodes = [p.uuid for p in world.people if p.traits.is_infected]
         r_nodes = [p.uuid for p in world.people if p.traits.immunity_degree > 0 and not p.traits.is_infected]
         nx.draw_networkx_nodes(G, plot_connections_graph.pos, node_size=1,
-                            nodelist=s_nodes, node_color='b')
+                               nodelist=s_nodes, node_color='b')
         nx.draw_networkx_nodes(G, plot_connections_graph.pos, node_size=1,
-                            nodelist=i_nodes, node_color='r')
+                               nodelist=i_nodes, node_color='r')
         nx.draw_networkx_nodes(G, plot_connections_graph.pos, node_size=1,
-                            nodelist=r_nodes, node_color='g')
+                               nodelist=r_nodes, node_color='g')
         nx.draw_networkx_edges(G, plot_connections_graph.pos, width=weights)
         plt.draw()
         plt.pause(0.001)
