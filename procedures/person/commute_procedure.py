@@ -5,7 +5,7 @@ from typing import Optional, Union, Iterable, Tuple
 from core.person import Person
 from core.site import Site
 from core.world import world
-from procedures.base import PersonProcedure
+from core.procedure import PersonProcedure
 from utils.time_utils import get_start_of_day, time_since
 from utils.timeframe import TimeFrame
 

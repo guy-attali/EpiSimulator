@@ -5,7 +5,7 @@ from collections import namedtuple
 from math import sqrt
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Circle, Rectangle, RegularPolygon
-from plugins.base import Plugin
+from core.plugin import Plugin
 from core.world import world
 
 class PluginMatplot(Plugin):

@@ -1,5 +1,5 @@
 from core.site import Site
-from procedures.base import SiteProcedure
+from core.procedure import SiteProcedure
 
 
 class TestProcedureSite(SiteProcedure):

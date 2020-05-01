@@ -1,5 +1,5 @@
 from core.person import Person
-from procedures.base import PersonProcedure
+from core.procedure import PersonProcedure
 
 
 class GetTestedProcedure(PersonProcedure):

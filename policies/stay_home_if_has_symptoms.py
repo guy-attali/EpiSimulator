@@ -1,5 +1,5 @@
 from core.world import world
-from policies.base import Policy, DecoratedPersonProcedure
+from core.policy import Policy, DecoratedPersonProcedure
 from procedures.person.commute_procedure import CommuteProcedure
 from utils.time_utils import time_since, SECONDS_IN_WEEK
 

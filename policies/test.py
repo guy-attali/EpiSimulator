@@ -1,4 +1,4 @@
-from policies.base import Policy, DecoratedPersonProcedure
+from core.policy import Policy, DecoratedPersonProcedure
 from procedures.person.go_home import GoHomeProcedure
 
 

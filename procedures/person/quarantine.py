@@ -1,4 +1,4 @@
-from procedures.base import PersonProcedure
+from core.procedure import PersonProcedure
 
 
 class HomeQuarantineProcedure(PersonProcedure):

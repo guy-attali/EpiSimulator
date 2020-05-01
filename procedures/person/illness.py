@@ -1,9 +1,8 @@
 import random
-from math import exp
 
 from core.person import Person
 from core.world import world
-from procedures.base import PersonProcedure
+from core.procedure import PersonProcedure
 from utils.time_utils import time_since, SECONDS_IN_WEEK
 import config
 

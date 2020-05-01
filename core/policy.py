@@ -1,6 +1,6 @@
 import abc
 
-from procedures.base import SiteProcedure, PersonProcedure
+from core.procedure import SiteProcedure, PersonProcedure
 
 
 class _DecoratedProcedure:
@@ -12,35 +12,31 @@ class _DecoratedProcedure:
 
 
 class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
-    def should_apply(self, person) -> bool:
-        return self.decorated_procedure.should_apply(person)
-
-    def apply(self, person):
-        return self.decorated_procedure.apply(person)
+    pass
 
 
 class DecoratedSiteProcedure(SiteProcedure, _DecoratedProcedure, abc.ABC):
-    def should_apply(self, site) -> bool:
-        return self.decorated_procedure.should_apply(site)
-
-    def apply(self, site):
-        return self.decorated_procedure.apply(site)
+    pass
 
 
-class Policy:
-
+class Policy(abc.ABC):
+    @abc.abstractmethod
     def decorate_procedure(self, procedure):
-        return procedure
+        pass
 
+    @abc.abstractmethod
     def world_pretick(self):
         pass
 
+    @abc.abstractmethod
     def world_posttick(self):
         pass
 
+    @abc.abstractmethod
     def world_post_scenario_build(self):
         pass
-    
+
+    @abc.abstractmethod
     def finish(self):
         pass
 

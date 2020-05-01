@@ -1,9 +1,9 @@
 
-from plugins.base import Plugin
+from core.plugin import Plugin
 from core.world import world
 from sites.hub import HubSite
 import pandas as pd
-from tqdm import tqdm
+
 
 class PluginPandas(Plugin):
     def __init__(self, print_metrics_interval):
