@@ -1,7 +1,7 @@
 import os, config
 from tqdm import tqdm
-from policies.matplot import PolicyMatplot
-from policies.pandas import PolicyPandas
+from plugins.matplot import PluginMatplot
+from plugins.pandas import PluginPandas
 from core.world import world
 
 
@@ -16,12 +16,12 @@ def run_scenario(Scenario, print_metrics_interval=None, display_interval=None,
     config.extend_from_dict(config_ext)
     world.reset()
 
-    policy_pandas = PolicyPandas(print_metrics_interval)
-    world.append_policy(policy_pandas)
+    plugin_pandas = PluginPandas(print_metrics_interval)
+    world.append_plugin(plugin_pandas)
 
     if display_interval is not None:
-        policy_matplot = PolicyMatplot(display_interval)
-        world.append_policy(policy_matplot)
+        plugin_matplot = PluginMatplot(display_interval)
+        world.append_plugin(plugin_matplot)
 
     scenario = Scenario()
     world.run_scenario(scenario)
@@ -36,6 +36,6 @@ def run_scenario(Scenario, print_metrics_interval=None, display_interval=None,
     world.finish()
 
     return {
-        'policy_pandas': policy_pandas,
-        'policy_matplot': policy_matplot
+        'pandas': plugin_pandas,
+        'matplot': plugin_matplot
     }

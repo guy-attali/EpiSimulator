@@ -11,6 +11,7 @@ class World:
         self.people = []
         self.sites = []
         self.policies = []
+        self.plugins = []
         self.current = 0
         self.time_step = timedelta(minutes=5)
         self.current_tf = TimeFrame(datetime(2020, 3, 1, 18, 0), self.time_step)
@@ -25,11 +26,20 @@ class World:
         for policy in self.policies:
             policy.world_post_scenario_build()
 
+        for plugin in self.plugins:
+            plugin.world_post_scenario_build()
+
     def append_site(self, site):
         self.sites.append(site)
 
     def append_person(self, person):
         self.people.append(person)
+
+    def append_policy(self, policy):
+        self.policies.append(policy)
+
+    def append_plugin(self, plugin):
+        self.plugins.append(plugin)
 
     @property
     def time_step(self):
@@ -41,12 +51,12 @@ class World:
             self.current_tf = TimeFrame(self.current_tf.start, self.current_tf.start + time_step)
         self.__time_step = time_step
 
-    def append_policy(self, policy):
-        self.policies.append(policy)
-
     def tick(self):
         for policy in self.policies:
             policy.world_pretick()
+
+        for plugin in self.plugins:
+            plugin.world_pretick()
 
         for person in self.people:
             person.tick()
@@ -57,12 +67,18 @@ class World:
         for policy in self.policies:
             policy.world_posttick()
 
+        for plugin in self.plugins:
+            plugin.world_posttick()
+
         self.current += 1
         self.current_tf = self.current_tf.next_tf(self.time_step)
 
     def finish (self):
         for policy in self.policies:
             policy.finish()
+
+        for plugin in self.plugins:
+            plugin.finish()
 
     def next_entity_id(self):
         self.UUID += 1

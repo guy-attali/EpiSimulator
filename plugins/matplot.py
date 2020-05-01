@@ -5,10 +5,10 @@ from collections import namedtuple
 from math import sqrt
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Circle, Rectangle, RegularPolygon
-from policies.base import Policy
+from plugins.base import Plugin
 from core.world import world
 
-class PolicyMatplot(Policy):
+class PluginMatplot(Plugin):
     def __init__(self, display_interval):
         self._display_interval = display_interval
     

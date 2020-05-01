@@ -10,7 +10,7 @@ def main():
   parser.add_argument('scenario', metavar='scenario',
                       help='Named scenario in scenarios directory')
 
-  parser.add_argument('-c', dest='config_filename', metavar='config_filename', help='Alternative configuration filename', default=os.path.join(root_path, 'config.yml'))
+  parser.add_argument('-c', dest='config_filename', metavar='config_filename', help='Alternative configuration filename', default=os.path.join(ROOT_PATH, 'config.yml'))
   parser.add_argument('-v', dest='verbose', action='store_true')
   parser.add_argument('-p', dest='pipe_log')
   parser.add_argument('-t', dest='ticks', type=int, default=1)
