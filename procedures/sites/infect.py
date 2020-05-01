@@ -1,9 +1,8 @@
 import random
-
+import config
 from core.site import Site
 from core.world import world
 from procedures.base import SiteProcedure
-from config import params_dict
 
 
 class InfectProcedure(SiteProcedure):
@@ -27,7 +26,7 @@ class InfectProcedure(SiteProcedure):
                                * ratio_of_ill_people \
                                * density \
                                * site.traits.dispersion_factor \
-                               * params_dict['disease_spreading_factor']
+                               * config.disease_spreading_factor
         # for each person, calculate whether it got is_infected, or maybe even
         # healed
         for person in people:

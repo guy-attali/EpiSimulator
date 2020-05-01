@@ -5,7 +5,7 @@ from core.person import Person
 from core.world import world
 from procedures.base import PersonProcedure
 from utils.time_utils import time_since, SECONDS_IN_WEEK
-from config import params_dict
+import config
 
 
 class IllnessProcedure(PersonProcedure):
@@ -22,7 +22,7 @@ class IllnessProcedure(PersonProcedure):
             time_infected = time_since(person.traits.timestamp_infected)
             if time_infected.total_seconds() > 0*SECONDS_IN_WEEK:
                 dt_days = world.current_tf.duration.total_seconds() / (60*60*24)
-                heal_probability = dt_days / (params_dict['average_sick_duration_days'])
+                heal_probability = dt_days / (config.average_sick_duration_days)
                 if random.random() < heal_probability:
                     person.traits.is_infected = False
                     person.traits.symptoms_degree = 0.0

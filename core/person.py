@@ -13,7 +13,6 @@ class Person(ProceduresHolder):
             household,
             person_traits: PersonTraits = None,
             **kwargs):
-
         ProceduresHolder.__init__(self)
         self.uuid = world.next_entity_id()
         self.traits = person_traits or PersonTraits(**kwargs)

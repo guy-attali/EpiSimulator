@@ -1,7 +1,7 @@
 import abc
 
 
-class Scenario(abc.ABC):
+class ScenarioBase(abc.ABC):
     @abc.abstractmethod
     def build(self):
         pass

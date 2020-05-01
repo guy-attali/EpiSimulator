@@ -1,10 +1,12 @@
+import sys, types
 from datetime import datetime, timedelta
-
 from utils.timeframe import TimeFrame
-
 
 class World:
     def __init__(self):
+        self.reset()
+
+    def reset (self):
         self.UUID = 0
         self.people = []
         self.sites = []
@@ -13,6 +15,15 @@ class World:
         self.time_step = timedelta(minutes=5)
         self.current_tf = TimeFrame(datetime(2020, 3, 1, 18, 0), self.time_step)
         self.autoinc_entity_id = 0
+
+    def run_scenario(self, scenario):
+        # ugly
+        if (scenario.time_step):
+            self.time_step = scenario.time_step
+        scenario.build()
+        
+        for policy in self.policies:
+            policy.world_post_scenario_build()
 
     def append_site(self, site):
         self.sites.append(site)
@@ -49,6 +60,10 @@ class World:
         self.current += 1
         self.current_tf = self.current_tf.next_tf(self.time_step)
 
+    def finish (self):
+        for policy in self.policies:
+            policy.finish()
+
     def next_entity_id(self):
         self.UUID += 1
         return self.UUID
@@ -70,4 +85,6 @@ class World:
 
 world = World()
 
-__all__ = ['world']
+
+
+

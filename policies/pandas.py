@@ -1,10 +1,21 @@
+
+from policies.base import Policy
 from core.world import world
 from sites.hub import HubSite
 import pandas as pd
+from tqdm import tqdm
 
-class MetricManager:
-    def __init__(self):
+class PolicyPandas(Policy):
+    def __init__(self, print_metrics_interval):
         self.log = []
+        self.print_metrics_interval = print_metrics_interval
+
+    def world_pretick(self):
+        self.add_to_log()
+        if self.print_metrics_interval is not None and \
+                world.current % self.print_metrics_interval == 0:
+            self.show()
+
 
     def get_sir_distribution(self):
         s = 0
@@ -42,7 +53,7 @@ class MetricManager:
         at_home, at_work_or_school, at_hub = self.get_site_distribution()
         print(world.current_time)
         print('S: {:6.2f}%   I: {:6.2f}%   R: {:6.2f}%'.format(s * 100, i * 100,
-                                                               r * 100))
+                                                                r * 100))
         print('home: {:6.2f}%   work/school: {:6.2f}%   hub: {:6.2f}%'.format(
             at_home * 100, at_work_or_school * 100, at_hub * 100))
         print('')
@@ -88,3 +99,8 @@ class MetricManager:
         metrics_df['time_days'] = metrics_df.time.apply(lambda x: x.timestamp()) / (24*60*60)
         metrics_df['time_days'] = metrics_df['time_days'] - metrics_df.loc[0, 'time_days']
         return metrics_df
+
+    def export (self):
+        return {
+            "log": self.log
+        }
