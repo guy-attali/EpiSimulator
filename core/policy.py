@@ -12,11 +12,14 @@ class _DecoratedProcedure:
 
 
 class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
-    pass
+    def __init__(self, procedure: PersonProcedure):
+        _DecoratedProcedure.__init__(self, procedure)
 
 
 class DecoratedSiteProcedure(SiteProcedure, _DecoratedProcedure, abc.ABC):
-    pass
+    def __init__(self, procedure: SiteProcedure):
+        _DecoratedProcedure.__init__(self, procedure)
+
 
 
 class Policy(abc.ABC):

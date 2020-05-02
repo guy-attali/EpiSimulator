@@ -1,3 +1,4 @@
+from core.person import Person
 from core.policy import Policy, DecoratedPersonProcedure
 from core.world import world
 from procedures.person.commute_procedure import CommuteProcedure
@@ -5,7 +6,7 @@ from utils.time_utils import time_since, SECONDS_IN_WEEK
 
 
 class DecoratedCommutingProcedure(DecoratedPersonProcedure):
-    def __init__(self, procedure, policy: 'StayHomeIfHasSymptoms'):
+    def __init__(self, procedure: CommuteProcedure, policy: 'StayHomeIfHasSymptoms'):
         DecoratedPersonProcedure.__init__(self, procedure)
         self.policy = policy
 
@@ -15,6 +16,9 @@ class DecoratedCommutingProcedure(DecoratedPersonProcedure):
             return self.decorated_procedure.should_apply(person)
         else:
             return False
+
+    def apply(self, person: Person):
+        self.decorated_procedure.apply(person)
 
 
 class StayHomeIfHasSymptoms(Policy):
@@ -34,3 +38,13 @@ class StayHomeIfHasSymptoms(Policy):
             num_people_with_symptoms = sum(person.traits.symptoms_degree > 0.2 for person in world.people)
 
             self.in_effect = num_people_with_symptoms > 0.05 * len(world.people)
+            
+    def world_posttick(self):
+        pass
+
+    def world_post_scenario_build(self):
+        pass
+
+    def finish(self):
+        pass
+

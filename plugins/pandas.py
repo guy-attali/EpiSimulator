@@ -103,3 +103,13 @@ class PluginPandas(Plugin):
         return {
             "log": self.log
         }
+    
+    def world_posttick(self):
+        pass
+
+    def world_post_scenario_build(self):
+        pass
+
+    def finish(self):
+        pass
+

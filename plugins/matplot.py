@@ -158,3 +158,9 @@ class PluginMatplot(Plugin):
                 patch.set_facecolor(cmap(infected))
         plt.draw()
         plt.pause(0.001)
+
+    def world_pretick(self):
+        pass
+
+    def finish(self):
+        pass
