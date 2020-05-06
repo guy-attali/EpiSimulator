@@ -5,7 +5,7 @@ import numpy as np
 
 from constants import OCCUPATION, SEX
 from core.person import Person
-from core.scenario import Scenario
+from core.scenario import ScenarioBase
 from core.site import GeoLocation
 from core.world import world
 from policies.lockdown import Lockdown
@@ -18,11 +18,11 @@ from sites.school import SchoolSite
 from sites.workplace import WorkplaceSite
 from utils.time_utils import SECONDS_IN_WEEK
 
-class Scenario1(Scenario):
+
+class Scenario(ScenarioBase):
     def __init__(self):
         random.seed(23)
         self.hub: HubSite = None
-        self.config_file_path = 'config.yml'
         self.time_step = timedelta(minutes=120)
 
     def create_hub(self):

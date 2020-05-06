@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from constants import OCCUPATION, SEX
 from core.person import Person
-from core.scenario import Scenario
+from core.scenario import ScenarioBase
 from core.site import GeoLocation, Site
 from core.world import world
 import policies.lockdown
@@ -24,7 +24,7 @@ def get_value(var):
         return var
 
 
-class Scenario2(Scenario):
+class Scenario2(ScenarioBase):
     def __init__(self, scenario_params):
         self.scenario_params = scenario_params
 

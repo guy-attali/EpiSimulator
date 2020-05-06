@@ -42,7 +42,6 @@ class Site(ProceduresHolder):
         self.name = name
         self.geolocation: GeoLocation = location
         self.people: Set[Person] = set()
-
         self.traits: SiteTraits = site_traits or SiteTraits(**kwargs)
         # the "effective" area, in meters squared, of the site.
         self.area = area

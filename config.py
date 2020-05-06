@@ -1,7 +1,11 @@
+import sys
 import yaml
-params_dict = {}
 
 
-def gen_params_dict(config_file_path):
-    with open(config_file_path) as f:
-        params_dict.update(yaml.load(f, Loader=yaml.FullLoader))
+def extend_from_dict(options):
+    sys.modules[__name__].__dict__.update(options)
+
+
+def extend_from_filename(filename):
+    with open(filename) as f:
+        sys.modules[__name__].__dict__.update(yaml.load(f, Loader=yaml.FullLoader))

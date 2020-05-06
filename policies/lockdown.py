@@ -1,11 +1,13 @@
+from core.person import Person
+from core.policy import Policy, DecoratedPersonProcedure
+from core.procedure import PersonProcedure
 from core.world import world
-from policies.base import Policy, DecoratedPersonProcedure
 from procedures.person.commute_procedure import CommuteProcedure
 from utils.time_utils import time_since, SECONDS_IN_WEEK
 
 
-class DecoratedCommutingProcedureLockdown(DecoratedPersonProcedure, CommuteProcedure):
-    def __init__(self, procedure, policy: 'StayHomeIfHasSymptoms'):
+class DecoratedCommutingProcedureLockdown(DecoratedPersonProcedure):
+    def __init__(self, procedure: PersonProcedure, policy: 'StayHomeIfHasSymptoms'):
         DecoratedPersonProcedure.__init__(self, procedure)
         self.policy = policy
 
@@ -14,6 +16,9 @@ class DecoratedCommutingProcedureLockdown(DecoratedPersonProcedure, CommuteProce
             return self.decorated_procedure.should_apply(person)
         else:
             return False
+
+    def apply(self, person: Person):
+        self.decorated_procedure.apply(person)
 
 
 class Lockdown(Policy):
@@ -31,3 +36,13 @@ class Lockdown(Policy):
             self.last_time_evaluated = world.current_time
 
             self.in_effect = not self.in_effect
+
+    def world_posttick(self):
+        pass
+
+    def world_post_scenario_build(self):
+        pass
+
+    def finish(self):
+        pass
+

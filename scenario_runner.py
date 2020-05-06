@@ -1,7 +1,7 @@
 from core.world import world
 from display.display_manager import DisplayManager
 from metrics.metrics_manager import MetricManager
-from config import gen_params_dict
+import config
 from tqdm import tqdm
 
 SECONDS_IN_DAY = 60 * 60 * 24
@@ -10,7 +10,7 @@ SECONDS_IN_DAY = 60 * 60 * 24
 def scenario_runner(scenario, print_metrics_interval=None, display_interval=None,
                     iters=1000, sim_days=None, log_metrics=None):
     world.__init__()
-    gen_params_dict(scenario.config_file_path)
+    config.extend_from_filename(scenario.config_file_path)
     world.time_step = scenario.time_step
     if sim_days is not None:
         iters = int(sim_days * SECONDS_IN_DAY / scenario.time_step.total_seconds())

@@ -3,9 +3,9 @@ from datetime import timedelta, datetime
 from typing import List
 
 from core.person import Person
+from core.procedure import SiteProcedure
 from core.site import Site
 from core.world import world
-from procedures.base import SiteProcedure
 
 
 class Meeting:
