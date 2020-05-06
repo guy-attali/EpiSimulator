@@ -15,7 +15,8 @@ class World:
         self.autoinc_entity_id = 0
 
     def append_site(self, site):
-        self.sites.append(site)
+        if site not in self.sites:
+            self.sites.append(site)
 
     def append_person(self, person):
         self.people.append(person)

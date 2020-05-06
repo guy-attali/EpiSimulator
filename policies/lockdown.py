@@ -4,7 +4,7 @@ from procedures.person.commute_procedure import CommuteProcedure
 from utils.time_utils import time_since, SECONDS_IN_WEEK
 
 
-class DecoratedCommutingProcedureLockdown(DecoratedPersonProcedure):
+class DecoratedCommutingProcedureLockdown(DecoratedPersonProcedure, CommuteProcedure):
     def __init__(self, procedure, policy: 'StayHomeIfHasSymptoms'):
         DecoratedPersonProcedure.__init__(self, procedure)
         self.policy = policy

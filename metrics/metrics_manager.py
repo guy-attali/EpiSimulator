@@ -41,6 +41,20 @@ class MetricManager:
         tot = len(world.people)
         return s / tot, i / tot, r / tot
 
+    def get_sir_people_uuid(self):
+        s = []
+        i = []
+        r = []
+        for person in world.people:
+            if person.traits.is_infected:
+                i.append(person.uuid)
+            elif person.traits.immunity_degree > 0:
+                r.append(person.uuid)
+            else:
+                s.append(person.uuid)
+
+        return s, i, r
+
     def get_site_distribution(self):
         at_home = 0
         at_work_or_school = 0
@@ -81,7 +95,7 @@ class MetricManager:
     def add_to_log(self, log_metrics=None):
         cur_metrics = {'time': world.current_time}
         if log_metrics is None or \
-                'site_distribution' in log_metrics:
+                'sir_distribution' in log_metrics:
             s, i, r = self.get_sir_distribution()
             cur_metrics.update({'s': s, 'i': i, 'r': r})
         if log_metrics is None or \
@@ -94,14 +108,9 @@ class MetricManager:
         if log_metrics is None or \
                 'connections' in log_metrics:
             cur_metrics.update({'connections': self.connections_graph()})
-        # cur_metrics = {
-        #     'time': world.current_time,
-        #     's': s, 'i': i, 'r': r,
-            # 'at_home': at_home,
-            # 'at_work_or_school': at_work_or_school,
-            # 'at_hub': at_hub,
-            # 'connections': self.connections_graph()
-        # }
+        if log_metrics is None or \
+                'sir_people_uuid' in log_metrics:
+            cur_metrics.update({'sir_people_uuid': self.get_sir_people_uuid()})
         self.log.append(cur_metrics)
 
     def to_df(self):

@@ -3,6 +3,7 @@ import math
 from collections import namedtuple
 from typing import Set, Optional
 
+from core.world import world
 from core.base_objects import ProceduresHolder
 from core.person import Person
 from core.traits import SiteTraits
@@ -45,6 +46,7 @@ class Site(ProceduresHolder):
         self.traits: SiteTraits = site_traits or SiteTraits(**kwargs)
         # the "effective" area, in meters squared, of the site.
         self.area = area
+        world.append_site(self)
 
     def enter(self, person: Person):
         self.people.add(person)

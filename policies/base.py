@@ -8,10 +8,11 @@ class _DecoratedProcedure:
         self.decorated_procedure = procedure
 
     def is_type(self, instance_type):
-        return self.decorated_procedure.is_type(instance_type)
+        return isinstance(self, instance_type) or \
+               self.decorated_procedure.is_type(instance_type)
 
 
-class DecoratedPersonProcedure(PersonProcedure, _DecoratedProcedure, abc.ABC):
+class DecoratedPersonProcedure(_DecoratedProcedure, PersonProcedure, abc.ABC):
     def should_apply(self, person) -> bool:
         return self.decorated_procedure.should_apply(person)
 

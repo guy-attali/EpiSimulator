@@ -18,7 +18,7 @@ class _Procedure(abc.ABC):
         pass
 
     def is_type(self, instance_type):
-        return type(self) is instance_type
+        return isinstance(self, instance_type)
 
 
 class PersonProcedure(_Procedure):

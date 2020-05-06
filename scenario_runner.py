@@ -7,9 +7,8 @@ from tqdm import tqdm
 SECONDS_IN_DAY = 60 * 60 * 24
 
 
-def scenario_runner(Scenario, print_metrics_interval=None, display_interval=None,
-                    iters=1000, sim_days=None):
-    scenario = Scenario()
+def scenario_runner(scenario, print_metrics_interval=None, display_interval=None,
+                    iters=1000, sim_days=None, log_metrics=None):
     world.__init__()
     gen_params_dict(scenario.config_file_path)
     world.time_step = scenario.time_step
@@ -21,7 +20,7 @@ def scenario_runner(Scenario, print_metrics_interval=None, display_interval=None
     if display_interval is not None:
         display = DisplayManager()
     for _ in tqdm(range(iters)):
-        metrics.add_to_log()
+        metrics.add_to_log(log_metrics=log_metrics)
         # print(world.current_time, world.people[0].site.name)
         if print_metrics_interval is not None and \
                 world.current % print_metrics_interval == 0:
