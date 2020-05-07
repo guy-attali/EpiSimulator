@@ -1,6 +1,7 @@
 import random
 from datetime import timedelta
 
+import config
 from constants import OCCUPATION, SEX
 from core.person import Person
 from core.scenario import ScenarioBase
@@ -60,7 +61,7 @@ scenario_params = {
     },
     'initial_infected_percentage': 20,
     'initial_infected_neighborhoods': [1],
-    'policies': [policies.lockdown.Lockdown()],
+    'policies': [policies.lockdown.Lockdown],
     'simulation_params': {
         'average_sick_duration_days': 14,
         'disease_spreading_factor': 0.001,
@@ -68,6 +69,12 @@ scenario_params = {
         'infected_days_to_end_symptoms': 100,
         'susceptible_days_to_symptoms': 100,
         'susceptible_days_to_end_symptoms': 5,
+        'test_sensitivity': 0.9,  # see 'https://www.finddx.org/covid-19/dx-data/' for real params
+        'test_specificity': 0.9,
+        'time_to_test_results': timedelta(days=5),
+        'tests_per_day': 100,
+        'movmean_window': timedelta(days=5),
+        'infected_thresh': 20
     }
 }
 
@@ -75,13 +82,14 @@ scenario_params = {
 class Scenario2(ScenarioBase):
     def __init__(self, scenario_params):
         self.scenario_params = scenario_params
+        config.extend_from_dict(self.scenario_params['simulation_params'])
 
         random.seed(self.scenario_params['seed'])
         self.time_step = timedelta(minutes=120)
 
     def build(self):
         for policy in self.scenario_params['policies']:
-            world.append_policy(policy)
+            world.append_policy(policy())
         self.gen_city(0)
         self.initial_infected(self.scenario_params['initial_infected_percentage'],
                               self.scenario_params['initial_infected_neighborhoods'])

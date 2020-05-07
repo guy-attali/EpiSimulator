@@ -9,7 +9,6 @@ from utils.time_utils import SECONDS_IN_DAY
 def scenario_runner(scenario, print_metrics_interval=None, display_interval=None,
                     iters=1000, sim_days=None, log_metrics=None):
     world.__init__()
-    config.extend_from_dict(scenario.scenario_params['simulation_params'])
     world.time_step = scenario.time_step
     if sim_days is not None:
         iters = int(sim_days * SECONDS_IN_DAY / scenario.time_step.total_seconds())
