@@ -18,6 +18,7 @@ from sites.workplace import WorkplaceSite
 from utils.time_utils import SECONDS_IN_WEEK, WORK_DAYS
 from core.traits import SiteTraits
 
+
 def get_value(var):
     if callable(var):
         return var()
@@ -25,12 +26,57 @@ def get_value(var):
         return var
 
 
+scenario_params = {
+    'seed': None,
+    'num_of_neighborhoods': 3,
+    'school': {
+        'num_of_sub_sites': 10,
+        'hub_area': 100, 'hub_dispersion': 0.5, 'hub_capacity': 50,
+        'sub_area': 100, 'sub_dispersion': 0.5, 'sub_capacity': 50,
+    },
+    'work': {
+        'num_of_sub_sites': 2,
+        'hub_area': 100, 'hub_dispersion': 0.5, 'hub_capacity': 50,
+        'sub_area': 100, 'sub_dispersion': 0.5, 'sub_capacity': 50,
+    },
+    'work_in_neighborhood_prob': 0.5,
+    'work_in_hub_prob': 1.,
+    'num_schools_per_neighborhood': 3,
+    'num_workplaces_per_neighborhood': 10,
+    'num_households_per_neighborhood': 100,
+    'num_adults_in_household': 2,
+    'num_children_in_household': 3,
+    'person_default_params': {
+        'age': 10,
+        'sex': SEX.FEMALE,
+        'occupation': None,
+        'susceptibility_degree': 1,
+        'obedient_degree': 1,
+        'is_infected': False,
+        'symptoms_degree': 0,
+        'immunity_degree': 0,
+        'timestamp_infected': None,
+        'timestamp_symptomatic': None
+    },
+    'initial_infected_percentage': 20,
+    'initial_infected_neighborhoods': [1],
+    'policies': [policies.lockdown.Lockdown()],
+    'simulation_params': {
+        'average_sick_duration_days': 14,
+        'disease_spreading_factor': 0.001,
+        'infected_days_to_symptoms': 5,
+        'infected_days_to_end_symptoms': 100,
+        'susceptible_days_to_symptoms': 100,
+        'susceptible_days_to_end_symptoms': 5,
+    }
+}
+
+
 class Scenario2(ScenarioBase):
     def __init__(self, scenario_params):
         self.scenario_params = scenario_params
 
         random.seed(self.scenario_params['seed'])
-        self.config_file_path = 'config.yml'
         self.time_step = timedelta(minutes=120)
 
     def build(self):
@@ -237,42 +283,6 @@ class Scenario2(ScenarioBase):
                 person.traits.timestamp_infected = world.current_time - timedelta(days=1) * random.uniform(0, 5)
 
 def main():
-    scenario_params = {
-        'seed': None,
-        'num_of_neighborhoods': 3,
-        'school': {
-            'num_of_sub_sites': 10,
-            'hub_area': 100, 'hub_dispersion': 0.5, 'hub_capacity': 50,
-            'sub_area': 100, 'sub_dispersion': 0.5, 'sub_capacity': 50,
-        },
-        'work': {
-            'num_of_sub_sites': 2,
-            'hub_area': 100, 'hub_dispersion': 0.5, 'hub_capacity': 50,
-            'sub_area': 100, 'sub_dispersion': 0.5, 'sub_capacity': 50,
-        },
-        'work_in_neighborhood_prob': 0.5,
-        'work_in_hub_prob': 1.,
-        'num_schools_per_neighborhood': 3,
-        'num_workplaces_per_neighborhood': 10,
-        'num_households_per_neighborhood': 100,
-        'num_adults_in_household': 2,
-        'num_children_in_household': 3,
-        'person_default_params': {
-            'age': 10,
-            'sex': SEX.FEMALE,
-            'occupation': None,
-            'susceptibility_degree': 1,
-            'obedient_degree': 1,
-            'is_infected': False,
-            'symptoms_degree': 0,
-            'immunity_degree': 0,
-            'timestamp_infected': None,
-            'timestamp_symptomatic': None
-        },
-        'initial_infected_percentage': 20,
-        'initial_infected_neighborhoods': [1],
-        'policies': [policies.lockdown.Lockdown()]
-    }
     s = Scenario2(scenario_params)
     s.build()
 
