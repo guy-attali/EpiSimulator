@@ -1,2 +1,6 @@
 average_sick_duration_days: 14
 disease_spreading_factor: 0.001
+infected_days_to_symptoms: 5
+infected_days_to_end_symptoms: 100
+susceptible_days_to_symptoms: 100
+susceptible_days_to_end_symptoms: 5

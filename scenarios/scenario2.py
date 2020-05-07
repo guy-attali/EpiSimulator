@@ -9,6 +9,7 @@ from core.world import world
 import policies.lockdown
 from procedures.person.commute_procedure import CommuteProcedure
 from procedures.person.illness import IllnessProcedure
+from procedures.person.symptoms import SymptomsProcedure
 from procedures.sites.infect import InfectProcedure
 from sites.household import HouseholdSite
 from sites.hub import HubSite
@@ -62,7 +63,7 @@ class Scenario2(ScenarioBase):
                     office = self.select_workplace(neighborhood_workplaces_dict, neighborhood_id, neighborhood_hub_dict)
                     self.assign_person_to_work_or_school(adult, office)
         self.send_people_to_hubs(neighborhood_hub_dict)
-        self.add_procedures_to_all_people([IllnessProcedure])
+        self.add_procedures_to_all_people([IllnessProcedure, SymptomsProcedure])
         self.add_procedures_to_all_sites([InfectProcedure])
 
     def gen_neighborhood_hub(self, neighborhood_id, city_id, neighborhood_params):

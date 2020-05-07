@@ -9,8 +9,10 @@ from utils.time_utils import time_since
 
 def heal_person(person: Person):
     person.traits.is_infected = False
-    person.traits.symptoms_degree = 0.0
+    person.traits.symptoms_degree = 0
     person.traits.immunity_degree = 1.0
+    person.traits.timestamp_symptomatic = None
+    person.traits.timestamp_infected = None
 
 
 class IllnessProcedure(PersonProcedure):
@@ -27,8 +29,3 @@ class IllnessProcedure(PersonProcedure):
             heal_probability = dt_days / config.average_sick_duration_days
             if random.random() < heal_probability:
                 heal_person(person)
-        if person.traits.symptoms_degree > 0 or time_infected.total_seconds() > 0:
-            person.traits.symptoms_degree += random.uniform(0, person.traits.age / 400)
-            person.traits.symptoms_degree = min(person.traits.symptoms_degree, 1.0)
-            if person.traits.timestamp_symptomatic is None:
-                person.traits.timestamp_symptomatic = world.current_time

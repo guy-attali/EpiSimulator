@@ -29,7 +29,7 @@ class Scenario(ScenarioBase):
         self.hub = HubSite(
             location=GeoLocation(-300.0, -300.0),
             area=500.0,
-            dispersion_factor=1.0,
+            dispersion_factor=1,
             nominal_capacity=100
         )
 
@@ -102,7 +102,7 @@ class Scenario(ScenarioBase):
             location=GeoLocation(random.uniform(-300, 300),
                                  random.uniform(-300, 300)),
             area=random.uniform(40, 60),
-            dispersion_factor=1.0,
+            dispersion_factor=1,
             nominal_capacity=random.randint(3, 6)
         )
         world.append_site(house)
@@ -117,11 +117,11 @@ class Scenario(ScenarioBase):
                 age=age + random.uniform(-5, 5),
                 sex=SEX.MALE,
                 occupation=OCCUPATION.UNEMPLOYED,
-                susceptibility_degree=1.0,
-                obedient_degree=1.0,
+                susceptibility_degree=1,
+                obedient_degree=1,
                 is_infected=False,
-                symptoms_degree=0.0,
-                immunity_degree=0.0,
+                symptoms_degree=0,
+                immunity_degree=0,
                 timestamp_infected=None,
                 timestamp_symptomatic=None,
                 household=house
@@ -138,7 +138,7 @@ class Scenario(ScenarioBase):
             location=GeoLocation(random.uniform(-300, 300),
                                  random.uniform(-300, 300)),
             area=random.uniform(40, 60),
-            dispersion_factor=1.0,
+            dispersion_factor=1,
             nominal_capacity=random.randint(3, 6)
         )
         world.append_site(house)
@@ -155,11 +155,11 @@ class Scenario(ScenarioBase):
                 age=parents_age + random.uniform(-5, 5),
                 sex=SEX.MALE,
                 occupation=OCCUPATION.WORKER,
-                susceptibility_degree=1.0,
-                obedient_degree=1.0,
+                susceptibility_degree=1,
+                obedient_degree=1,
                 is_infected=False,
-                symptoms_degree=0.0,
-                immunity_degree=0.0,
+                symptoms_degree=0,
+                immunity_degree=0,
                 timestamp_infected=None,
                 timestamp_symptomatic=None,
                 household=house
@@ -189,11 +189,11 @@ class Scenario(ScenarioBase):
                     age=parents_age - 25 + random.uniform(-5, 5),
                     sex=SEX.MALE,
                     occupation=OCCUPATION.STUDENT,
-                    susceptibility_degree=1.0,
-                    obedient_degree=1.0,
+                    susceptibility_degree=1,
+                    obedient_degree=1,
                     is_infected=False,
-                    symptoms_degree=0.0,
-                    immunity_degree=0.0,
+                    symptoms_degree=0,
+                    immunity_degree=0,
                     timestamp_infected=None,
                     timestamp_symptomatic=None,
                     household=house
@@ -211,7 +211,7 @@ class Scenario(ScenarioBase):
         workplace = WorkplaceSite(
             location=GeoLocation(random.normalvariate(0, 100), random.normalvariate(0, 100)),
             area=random.uniform(100, 300),
-            dispersion_factor=1.0,
+            dispersion_factor=1,
             nominal_capacity=random.randint(15, 25))
         world.append_site(workplace)
         workplace.add_procedure(InfectProcedure())
@@ -222,7 +222,7 @@ class Scenario(ScenarioBase):
             location=GeoLocation(random.uniform(-300, 300),
                                  random.uniform(-300, 300)),
             area=random.uniform(300, 1000),
-            dispersion_factor=1.0,
+            dispersion_factor=1,
             nominal_capacity=random.randint(100, 500))
         world.append_site(school)
         school.add_procedure(InfectProcedure())

@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from core.world import world
 
+SECONDS_IN_DAY = 60 * 60 * 24
 SECONDS_IN_WEEK = 60 * 60 * 24 * 7
 WORK_DAYS = [6, 0, 1, 2, 3]
 
