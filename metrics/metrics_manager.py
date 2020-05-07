@@ -1,20 +1,30 @@
-import pandas as pd
-
-from core.plugin import Plugin
 from core.world import world
 from sites.hub import HubSite
+import pandas as pd
 
-
-class PluginPandas(Plugin):
-    def __init__(self, print_metrics_interval):
+class MetricManager:
+    def __init__(self):
         self.log = []
-        self.print_metrics_interval = print_metrics_interval
 
-    def world_pretick(self):
-        self.add_to_log()
-        if self.print_metrics_interval is not None and \
-                world.current % self.print_metrics_interval == 0:
-            self.show()
+    def calc_reproduction_number(self):
+        """
+        Calculate the "reproduction number".
+        The idea is to calculate the average number of new infections for all the infective people
+        and multiply by the infection duration.
+        :return: R
+        """
+        n_infected = sum([1 for p in world.people if p.traits.is_infected])
+        new_infections = sum([1 for p in world.people
+                              if p.traits.is_infected and
+                              (p.traits.timestamp_infected in world.current_tf)])
+        return 1
+        # infecting = (self.pop_df.status == 'I') & \
+        #             (self.pop_df.days_in_status > 0) & ~self.pop_df.is_isolated
+        # if infecting.sum() == 0:
+        #     return np.nan
+        # R = self.params['infection_duration'] * self.params['iter_per_day'] * \
+        #     (new_infections.sum() / infecting.sum())
+        # return R
 
     def get_sir_distribution(self):
         s = 0
@@ -30,6 +40,20 @@ class PluginPandas(Plugin):
 
         tot = len(world.people)
         return s / tot, i / tot, r / tot
+
+    def get_sir_people_uuid(self):
+        s = []
+        i = []
+        r = []
+        for person in world.people:
+            if person.traits.is_infected:
+                i.append(person.uuid)
+            elif person.traits.immunity_degree > 0:
+                r.append(person.uuid)
+            else:
+                s.append(person.uuid)
+
+        return s, i, r
 
     def get_site_distribution(self):
         at_home = 0
@@ -55,6 +79,7 @@ class PluginPandas(Plugin):
                                                                r * 100))
         print('home: {:6.2f}%   work/school: {:6.2f}%   hub: {:6.2f}%'.format(
             at_home * 100, at_work_or_school * 100, at_hub * 100))
+        print('reproduction_number: {}'.format(self.calc_reproduction_number()))
         print('')
 
     def connections_graph(self):
@@ -62,7 +87,7 @@ class PluginPandas(Plugin):
         for site in world.sites:
             people = list(site.people)
             for i, person_1 in enumerate(people[:-1]):
-                for person_2 in people[i + 1:]:
+                for person_2 in people[i+1:]:
                     if person_1 is not person_2:
                         connections.add((person_1.uuid, person_2.uuid))
         return connections
@@ -70,7 +95,7 @@ class PluginPandas(Plugin):
     def add_to_log(self, log_metrics=None):
         cur_metrics = {'time': world.current_time}
         if log_metrics is None or \
-                'site_distribution' in log_metrics:
+                'sir_distribution' in log_metrics:
             s, i, r = self.get_sir_distribution()
             cur_metrics.update({'s': s, 'i': i, 'r': r})
         if log_metrics is None or \
@@ -83,33 +108,13 @@ class PluginPandas(Plugin):
         if log_metrics is None or \
                 'connections' in log_metrics:
             cur_metrics.update({'connections': self.connections_graph()})
-        # cur_metrics = {
-        #     'time': world.current_time,
-        #     's': s, 'i': i, 'r': r,
-        # 'at_home': at_home,
-        # 'at_work_or_school': at_work_or_school,
-        # 'at_hub': at_hub,
-        # 'connections': self.connections_graph()
-        # }
+        if log_metrics is None or \
+                'sir_people_uuid' in log_metrics:
+            cur_metrics.update({'sir_people_uuid': self.get_sir_people_uuid()})
         self.log.append(cur_metrics)
 
     def to_df(self):
         metrics_df = pd.DataFrame(self.log)
-        metrics_df['time_days'] = metrics_df.time.apply(lambda x: x.timestamp()) / (24 * 60 * 60)
+        metrics_df['time_days'] = metrics_df.time.apply(lambda x: x.timestamp()) / (24*60*60)
         metrics_df['time_days'] = metrics_df['time_days'] - metrics_df.loc[0, 'time_days']
         return metrics_df
-
-    def export(self):
-        return {
-            "log": self.log
-        }
-    
-    def world_posttick(self):
-        pass
-
-    def world_post_scenario_build(self):
-        pass
-
-    def finish(self):
-        pass
-

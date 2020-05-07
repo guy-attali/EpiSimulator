@@ -47,10 +47,16 @@ class PersonTraits(Traits):
 
 
 class SiteTraits(Traits):
-    def __init__(self, dispersion_factor: float, nominal_capacity: int):
+    def __init__(self, dispersion_factor: float, nominal_capacity: int,
+                 neighborhood_id: Optional[int]=None, city_id: Optional[int]=None,
+                 parent_site: 'Site'=None):
         # the typical maximal number of people that the site can contain
         self.nominal_capacity = nominal_capacity
 
         # this value determines the tendency of people in the site to move around
         # (lower values mean that people are relatively static)
         self.dispersion_factor = dispersion_factor
+
+        self.parent_site = parent_site
+        self.city_id = city_id
+        self.neighborhood_id = neighborhood_id
