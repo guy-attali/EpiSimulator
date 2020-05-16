@@ -4,6 +4,7 @@ import config
 from core.procedure import SiteProcedure
 from core.site import Site
 from core.world import world
+from utils.probs import prob_over_time
 
 
 class InfectProcedure(SiteProcedure):
@@ -16,18 +17,11 @@ class InfectProcedure(SiteProcedure):
         if number_of_people == 0:
             return
 
-        number_of_ill_people = sum([person.traits.is_infected for person in people])
-        ratio_of_ill_people = number_of_ill_people / number_of_people
-        density = number_of_people / site.area
-        ratio_of_capacity = number_of_people / site.traits.nominal_capacity
-
-        # from these variables, get a "score" for the site, where a high score
-        # means higher chance if infection
-        site_infecting_score = (world.current_tf.duration.total_seconds() / 60) \
-                               * ratio_of_ill_people \
-                               * density \
-                               * site.traits.dispersion_factor \
-                               * config.disease_spreading_factor
+        total_infectious_level = sum([person.traits.infectious_level for person in people])
+        if total_infectious_level == 0:
+            return
+        infectious_level_density = total_infectious_level / site.area
+        site_infecting_score = infectious_level_density * site.traits.dispersion_factor * config.disease_spreading_factor
         # for each person, calculate whether it got is_infected, or maybe even
         # healed
         for person in people:
@@ -38,8 +32,9 @@ class InfectProcedure(SiteProcedure):
             # a probability for this specific person of getting is_infected
             person_infecting_score = site_infecting_score * (
                     1 - person.traits.immunity_degree) * person.traits.susceptibility_degree
-
+            infecting_prob_per_hour = min(1, person_infecting_score)
+            infecting_prob = prob_over_time(infecting_prob_per_hour, world.current_tf.duration.total_seconds() / 3600)
             # perform infection
-            if random.random() < person_infecting_score:
+            if random.random() < infecting_prob:
                 person.traits.is_infected = True
                 person.traits.timestamp_infected = world.current_time

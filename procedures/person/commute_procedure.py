@@ -8,6 +8,7 @@ from core.site import Site
 from core.world import world
 from utils.time_utils import get_start_of_day, time_since
 from utils.timeframe import TimeFrame
+from utils.probs import prob_over_time
 
 
 class CommuteProcedure(PersonProcedure):
@@ -64,8 +65,10 @@ class CommuteProcedure(PersonProcedure):
                 return False
 
         # randomly decide whether the pattern will be executed
-        if random.random() > 1 - (
-                (1 - self.probability_per_minute) ** (world.current_tf.duration.total_seconds() / 60)):
+        if random.random() > prob_over_time(self.probability_per_minute,
+                                            world.current_tf.duration.total_seconds() / 60):
+                # 1 - (
+                # (1 - self.probability_per_minute) ** (world.current_tf.duration.total_seconds() / 60)):
             return False
 
         return True

@@ -21,7 +21,8 @@ class PersonTraits(Traits):
                  symptoms_degree: float,
                  immunity_degree: float,
                  timestamp_infected: Optional[datetime],
-                 timestamp_symptomatic: Optional[datetime]):
+                 timestamp_symptomatic: Optional[datetime],
+                 infectious_level: float):
         self.age: float = age
         self.sex: SEX = sex
         self.occupation: OCCUPATION = occupation
@@ -32,6 +33,7 @@ class PersonTraits(Traits):
         self.immunity_degree: float = immunity_degree
         self.timestamp_infected: Optional[datetime] = timestamp_infected
         self.timestamp_symptomatic: Optional[datetime] = timestamp_symptomatic
+        self.infectious_level: float = infectious_level
 
         self.check_input_validity()
 

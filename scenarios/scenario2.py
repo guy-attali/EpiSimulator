@@ -57,7 +57,8 @@ scenario_params = {
         'symptoms_degree': 0,
         'immunity_degree': 0,
         'timestamp_infected': None,
-        'timestamp_symptomatic': None
+        'timestamp_symptomatic': None,
+        'infectious_level': 0
     },
     'initial_infected_percentage': 20,
     'initial_infected_neighborhoods': [1],
@@ -74,7 +75,9 @@ scenario_params = {
         'time_to_test_results': timedelta(days=5),
         'tests_per_day': 100,
         'movmean_window': timedelta(days=5),
-        'infected_thresh': 20
+        'infected_thresh': 20,
+        'time_step': timedelta(minutes=120),
+        'days_to_infectious': 3
     }
 }
 
@@ -85,7 +88,7 @@ class Scenario2(ScenarioBase):
         config.extend_from_dict(self.scenario_params['simulation_params'])
 
         random.seed(self.scenario_params['seed'])
-        self.time_step = timedelta(minutes=120)
+        self.time_step = config.time_step#timedelta(minutes=120)
 
     def build(self):
         for policy in self.scenario_params['policies']:
@@ -297,10 +300,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# sites_in_procedures = []
-# for person in world.people:
-#     for procedure in person.procedures:
-#         if procedure.is_type(CommuteProcedure):
-#             sites_in_procedures.append(procedure.decorated_procedure.initial_sites)
-#             sites_in_procedures.append(procedure.decorated_procedure.dest_sites)
